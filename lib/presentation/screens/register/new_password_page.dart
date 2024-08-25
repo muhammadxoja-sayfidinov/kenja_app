@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/screens/register/login_page.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
-import '../../../core/constants/colors.dart';
+
 import '../../widgets/custom_text_form_field.dart';
 
 class NewPasswordPage extends StatefulWidget {
@@ -45,7 +45,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  color: mainDarkColor,
+                  // color: mainDarkColor,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: 24.0.h, horizontal: 24.w),

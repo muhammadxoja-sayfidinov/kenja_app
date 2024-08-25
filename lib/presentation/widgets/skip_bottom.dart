@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 
 class MySkipBottom extends StatelessWidget {
   const MySkipBottom({super.key, required this.onTap});
@@ -25,7 +24,7 @@ class MySkipBottom extends StatelessWidget {
         child: const Text(
           'O\'tkazib yuborish',
           style: TextStyle(
-            color: gray,
+            // color: gray,
             fontWeight: FontWeight.w400,
             fontSize: 16,
           ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 
 class CustomToggleButtons extends StatefulWidget {
   final int pageIndex;
@@ -51,7 +50,7 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
-            color: isSelected ? Colors.white : gray,
+            // color: isSelected ? Colors.white : gray,
             width: 1.0,
           ),
         ),
@@ -59,7 +58,7 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
           child: Text(
             text,
             style: TextStyle(
-              color: isSelected ? Colors.white : gray,
+              // color: isSelected ? Colors.white : gray,
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
             ),

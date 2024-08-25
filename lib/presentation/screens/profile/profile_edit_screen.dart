@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -14,10 +13,9 @@ class ProfileEditScreen extends ConsumerWidget {
     final profile = ref.watch(profileProvider);
 
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: mainDarkColor,
+        // backgroundColor: mainDarkColor,
         elevation: 0,
         title: Text('Profile', style: TextStyle(color: Colors.white)),
       ),
@@ -46,7 +44,7 @@ class ProfileEditScreen extends ConsumerWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
                 decoration: BoxDecoration(
-                  color: darkColor,
+                  // color: darkColor,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Column(
@@ -85,14 +83,14 @@ class ProfileEditScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: darkColor,
+                    // color: darkColor,
                     borderRadius: BorderRadius.circular(12.r)),
                 child: Wrap(
                   alignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundColor: darkError,
+                      // backgroundColor: darkError,
                       child: SvgPicture.asset(
                         'assets/icons/trash.svg',
                         width: 20.w,
@@ -101,7 +99,8 @@ class ProfileEditScreen extends ConsumerWidget {
                     2.horizontalSpace,
                     Text(
                       'Profilni o’chirish',
-                      style: CustomTextStyle.style500.copyWith(color: red),
+                      style:
+                          CustomTextStyle.style500.copyWith(color: Colors.red),
                     ),
                   ],
                 ),

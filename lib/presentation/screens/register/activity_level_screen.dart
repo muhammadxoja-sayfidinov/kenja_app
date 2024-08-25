@@ -5,9 +5,7 @@ import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/home_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../widgets/custom_toggle_buttons.dart';
-import 'activity_level_screen.dart';
 
 final goalProvider = StateProvider<String?>((ref) => null);
 
@@ -45,7 +43,7 @@ class ActivityLevelScreen extends ConsumerWidget {
                 ),
                 height: 320.h,
                 decoration: BoxDecoration(
-                  color: mainDarkColor,
+                  // color: mainDarkColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(24.r),
                     topRight: Radius.circular(24.r),

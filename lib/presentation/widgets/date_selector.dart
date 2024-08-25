@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 
 class DateSelector extends StatefulWidget {
   @override
@@ -39,11 +38,11 @@ class _DateSelectorState extends State<DateSelector> {
               width: 50.w,
               margin: EdgeInsets.symmetric(horizontal: 4.0.w),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.white
-                    : selectedIndex >= index
-                        ? darkColor
-                        : gray,
+                // color: isSelected
+                //     ? Colors.white
+                //     : selectedIndex >= index
+                //         ? darkColor
+                //         : gray,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Center(
@@ -53,11 +52,11 @@ class _DateSelectorState extends State<DateSelector> {
                     Text(
                       dates[index]['day']!,
                       style: TextStyle(
-                        color: isSelected
-                            ? Colors.black
-                            : selectedIndex >= index
-                                ? gray
-                                : Colors.white70,
+                        // color: isSelected
+                        //     ? Colors.black
+                        //     : selectedIndex >= index
+                        //         ? gray
+                        //         : Colors.white70,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -65,11 +64,11 @@ class _DateSelectorState extends State<DateSelector> {
                     Text(
                       dates[index]['label']!,
                       style: TextStyle(
-                        color: isSelected
-                            ? Colors.black
-                            : selectedIndex >= index
-                                ? gray
-                                : Colors.white70,
+                        // color: isSelected
+                        //     ? Colors.black
+                        //     : selectedIndex >= index
+                        //         ? gray
+                        //         : Colors.white70,
                         fontSize: 14.sp,
                       ),
                     ),

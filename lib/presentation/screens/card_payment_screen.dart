@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 class CardPaymentBottomSheet extends StatefulWidget {
@@ -87,7 +86,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
         labelText: 'Karta raqami',
         labelStyle: TextStyle(color: Colors.white70),
         filled: true,
-        fillColor: darkColor,
+        // fillColor: darkColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide.none,
@@ -111,7 +110,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
         labelText: 'Amal qilish muddati',
         labelStyle: TextStyle(color: Colors.white70),
         filled: true,
-        fillColor: darkColor,
+        // fillColor: darkColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide.none,
@@ -129,7 +128,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
         labelText: 'CVV',
         labelStyle: TextStyle(color: Colors.white70),
         filled: true,
-        fillColor: darkColor,
+        // fillColor: darkColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide.none,

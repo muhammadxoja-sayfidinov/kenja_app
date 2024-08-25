@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/widgets/custom_text_form_field.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -15,10 +14,9 @@ class UserDetailsScreen extends ConsumerWidget {
     final userProfile = ref.watch(userProfileProvider);
 
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: mainDarkColor,
+        // backgroundColor: mainDarkColor,
         elevation: 0,
         title: Text('Mening ma\'lumotlarim',
             style: TextStyle(color: Colors.white)),
@@ -95,7 +93,7 @@ class UserDetailsScreen extends ConsumerWidget {
           value: 'Erkak',
         ),
         Divider(
-          color: darkColor,
+          // color: darkColor,
           indent: 65.w,
           endIndent: 40..w,
         ), // Ikki gender orasidagi chiziq
@@ -120,7 +118,7 @@ class UserDetailsScreen extends ConsumerWidget {
         width: 36.w,
         height: 36.w,
         decoration: BoxDecoration(
-          color: darkColor,
+          // color: darkColor,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Image.asset(

@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/homePage/mealCard.dart';
 
-import '../../core/constants/colors.dart';
 import '../../core/constants/styles.dart';
 import '../widgets/date_selector.dart';
-import '../widgets/homePage/achievements_section.dart';
-import '../widgets/homePage/exercises_section.dart';
 import 'meal_detail_screen.dart';
 
 class MealScreen extends StatelessWidget {
@@ -15,7 +12,6 @@ class MealScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: mainDarkColor,
         appBar: AppBar(
           title: Text(
             'Tavsiya etilgan taomlar',

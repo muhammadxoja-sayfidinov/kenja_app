@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -10,7 +9,6 @@ class RecipeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0.w),
@@ -121,7 +119,7 @@ class InfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.0.w),
       decoration: BoxDecoration(
-        color: darkColor,
+        // color: darkColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(

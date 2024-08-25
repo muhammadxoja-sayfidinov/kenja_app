@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
-import 'package:kenja_app/core/constants/styles.dart';
 
 import '../../widgets/register/RegistrationForm.dart';
 import '../../widgets/register/login_form.dart';
@@ -47,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 80.h),
                 Container(
                   decoration: BoxDecoration(
-                    color: mainDarkColor,
+                    // color: mainDarkColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.r),
                       topRight: Radius.circular(24.r),

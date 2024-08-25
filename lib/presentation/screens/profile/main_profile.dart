@@ -1,11 +1,10 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/profile/profile_edit_screen.dart';
 import 'package:kenja_app/presentation/screens/profile/user_details_screen.dart';
-import 'package:kenja_app/presentation/screens/register/user_info_screen.dart';
 import 'package:kenja_app/presentation/widgets/pro_plan.dart';
 
 import '../../widgets/chooseLanguage.dart';
@@ -21,7 +20,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       body: Padding(
         padding: EdgeInsets.all(16.w),
         child: SingleChildScrollView(
@@ -33,9 +31,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(8.w),
                   child: IconButton(
-                    icon: const Icon(Icons.sunny, color: Colors.white),
+                    icon: Icon(
+                      AdaptiveTheme.of(context).mode.isDark
+                          ? Icons.sunny
+                          : Icons.dark_mode,
+                    ),
                     onPressed: () {
-                      // Settings button action
+                      AdaptiveTheme.of(context).mode.isDark
+                          ? AdaptiveTheme.of(context).setLight()
+                          : AdaptiveTheme.of(context).setDark();
                     },
                   ),
                 ),
@@ -63,8 +67,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       EdgeInsets.symmetric(vertical: 6.h, horizontal: 12.w),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: darkColor,
-                    ),
+                        // color: darkColor,
+                        ),
                     borderRadius: BorderRadius.circular(
                       80.r,
                     ),
@@ -95,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Divider(
-                color: darkColor,
+                // color: darkColor,
                 indent: 55.w,
                 height: 0,
               ),
@@ -117,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               Divider(
-                color: darkColor,
+                // color: darkColor,
                 indent: 55.w,
                 height: 0,
               ),
@@ -135,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               Divider(
-                color: darkColor,
+                // color: darkColor,
                 indent: 55.w,
                 height: 0,
               ),
@@ -150,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Divider(
-                color: darkColor,
+                // color: darkColor,
                 indent: 55.w,
                 height: 10.h,
               ),
@@ -179,6 +183,7 @@ class CustomListTile extends StatelessWidget {
     required this.leading,
     this.onTap,
   });
+
   final String title;
   final String? subtitle;
   final Widget trailing;
@@ -195,12 +200,12 @@ class CustomListTile extends StatelessWidget {
             width: 40.w,
             height: 40.w,
             decoration: BoxDecoration(
-              color: darkColor,
+              // color: darkColor,
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: SvgPicture.asset(
               leading,
-              color: Colors.white,
+              // color: Colors.white,
             )),
         title: Text(
           title,

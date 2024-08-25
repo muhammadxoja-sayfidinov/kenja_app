@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 class MealSuccessScreen extends StatelessWidget {
@@ -9,7 +8,6 @@ class MealSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -65,7 +63,7 @@ class MealSuccessScreen extends StatelessWidget {
       height: 60.h,
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: darkColor,
+        // color: darkColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(

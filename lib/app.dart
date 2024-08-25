@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/screens/register/login_page.dart';
@@ -9,7 +10,9 @@ import 'package:kenja_app/presentation/screens/register/verification_code_page.d
 import 'config/theme.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.savedThemeMode});
+
+  final AdaptiveThemeMode? savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +21,22 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            title: 'My Fitness App',
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            home: TipsScreen(),
-            routes: {
-              '/login': (context) => LoginPage(),
-              '/reset-password': (context) => PasswordResetPage(),
-              '/verification-code': (context) => VerificationCodePage(),
-              '/new-password': (context) => NewPasswordPage(),
-            },
-          );
+          return AdaptiveTheme(
+              light: lightTheme,
+              dark: darkTheme,
+              initial: savedThemeMode ?? AdaptiveThemeMode.light,
+              builder: (theme, darkTheme) => MaterialApp(
+                    title: 'My Fitness App',
+                    theme: theme,
+                    darkTheme: darkTheme,
+                    home: TipsScreen(),
+                    routes: {
+                      '/login': (context) => LoginPage(),
+                      '/reset-password': (context) => PasswordResetPage(),
+                      '/verification-code': (context) => VerificationCodePage(),
+                      '/new-password': (context) => NewPasswordPage(),
+                    },
+                  ));
         });
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 
 void showEditBottomSheet({
   required BuildContext context,
@@ -12,7 +11,7 @@ void showEditBottomSheet({
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
     ),
-    backgroundColor: mainDarkColor,
+    // backgroundColor: mainDarkColor,
     isScrollControlled: true,
     builder: (context) {
       return Padding(

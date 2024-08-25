@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -44,7 +43,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  color: mainDarkColor,
+                  // color: mainDarkColor,
                   child: Padding(
                     padding: EdgeInsets.all(24.0.w),
                     child: Column(

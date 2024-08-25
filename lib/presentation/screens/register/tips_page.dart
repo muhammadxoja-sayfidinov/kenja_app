@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
-import 'package:kenja_app/presentation/screens/home_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 import 'package:kenja_app/presentation/widgets/skip_bottom.dart';
 
@@ -25,7 +23,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: mainDarkColor,
+        // backgroundColor: mainDarkColor,
         body: Column(
           children: [
             Expanded(

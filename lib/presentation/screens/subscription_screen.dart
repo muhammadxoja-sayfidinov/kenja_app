@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/payment_methods_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
@@ -16,7 +15,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       body: Stack(
         children: [
           Image.asset(
@@ -111,7 +109,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? darkError : mainDarkColor,
+          // color: isSelected ? darkError : mainDarkColor,
           borderRadius: BorderRadius.circular(12.r),
           border: isSelected ? Border.all(color: Colors.red, width: 2.w) : null,
         ),

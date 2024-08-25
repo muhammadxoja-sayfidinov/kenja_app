@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../core/constants/colors.dart';
 import '../../core/constants/styles.dart';
 import '../screens/subscription_screen.dart';
 
@@ -39,7 +38,7 @@ class ProPlan extends StatelessWidget {
                   children: [
                     CircleAvatar(
                         maxRadius: 12.r,
-                        backgroundColor: darkColor,
+                        // backgroundColor: darkColor,
                         child: SvgPicture.asset(
                           'assets/icons/crown.svg',
                           color: Colors.white,
@@ -64,7 +63,7 @@ class ProPlan extends StatelessWidget {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
               decoration: BoxDecoration(
-                color: mainDarkColor,
+                // color: mainDarkColor,
                 borderRadius: BorderRadius.circular(
                   20.r,
                 ),

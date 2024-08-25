@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -10,7 +9,7 @@ void showLanguageSelectionSheet(BuildContext context) {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
     ),
-    backgroundColor: mainDarkColor,
+    // backgroundColor: mainDarkColor,
     isScrollControlled: true,
     builder: (context) {
       return Padding(
@@ -59,7 +58,8 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
                 width: 36.w,
                 height: 36.w,
                 decoration: BoxDecoration(
-                    color: darkColor, borderRadius: BorderRadius.circular(8.r)),
+                    // color: darkColor,
+                    borderRadius: BorderRadius.circular(8.r)),
                 padding: EdgeInsets.all(8.w),
                 child: Image.asset(
                   languages[index]['flag']!,
@@ -70,8 +70,7 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
               ),
               title: Text(
                 languages[index]['name']!,
-                style: CustomTextStyle.style400
-                    .copyWith(color: white, fontSize: 16.sp),
+                style: CustomTextStyle.style400.copyWith(fontSize: 16.sp),
               ),
               trailing: Transform.scale(
                 scale: 1.0.w,

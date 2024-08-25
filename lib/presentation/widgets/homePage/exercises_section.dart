@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
 import '../../screens/Exercises/exercise_screen.dart';
 import '../next_bottom.dart';
@@ -52,7 +51,7 @@ class ExercisesSection extends StatelessWidget {
                             padding: const EdgeInsets.all(5),
                             width: 120.w,
                             decoration: BoxDecoration(
-                              color: lightRed,
+                              // color: lightRed,
                               borderRadius: BorderRadius.circular(16.r),
                             ),
                             child: const Wrap(
@@ -81,7 +80,7 @@ class ExercisesSection extends StatelessWidget {
                         ),
                         16.verticalSpace,
                         MyNextBottom(
-                            color: done ? Colors.transparent : white,
+                            // color: done ? Colors.transparent : white,
                             onTap: () {
                               Navigator.push(
                                   context,

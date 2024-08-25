@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/presentation/screens/home_screen.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
 import '../../widgets/homePage/exercises_section.dart';
 
@@ -12,7 +10,6 @@ class ExercisesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
         title: Text(
           'Sizga mos mashqlar',

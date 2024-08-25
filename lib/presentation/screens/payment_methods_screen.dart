@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
 
 import 'card_payment_screen.dart';
 
@@ -8,9 +7,8 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
-        backgroundColor: mainDarkColor,
+        // backgroundColor: mainDarkColor,
         elevation: 0,
         title: Text('To\'lov usullari', style: TextStyle(color: Colors.white)),
       ),
@@ -60,7 +58,7 @@ class PaymentMethodsScreen extends StatelessWidget {
               onTap: () {
                 showModalBottomSheet(
                   isScrollControlled: true,
-                  backgroundColor: mainDarkColor,
+                  // backgroundColor: mainDarkColor,
                   context: context,
                   builder: (context) {
                     return Padding(
@@ -91,7 +89,7 @@ class PaymentMethodsScreen extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: darkColor,
+          // color: darkColor,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(

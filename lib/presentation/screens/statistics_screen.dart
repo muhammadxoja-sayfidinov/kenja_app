@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/constants/colors.dart';
 import '../../core/constants/styles.dart';
 import '../widgets/homePage/achievements_section.dart';
 import '../widgets/pro_plan.dart';
@@ -13,9 +12,8 @@ class StatisticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainDarkColor,
       appBar: AppBar(
-        backgroundColor: mainDarkColor,
+        // backgroundColor: mainDarkColor,
         elevation: 0,
         title: const Text('Statistika', style: TextStyle(color: Colors.white)),
         actions: [
@@ -38,7 +36,7 @@ class StatisticsScreen extends StatelessWidget {
                 // height: 375.h,
                 height: 102.h,
                 decoration: BoxDecoration(
-                  color: darkColor,
+                  // color: darkColor,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: const AchievementsSection(),
@@ -72,7 +70,7 @@ class StatisticsScreen extends StatelessWidget {
       width: 162.w,
       height: 120.h,
       decoration: BoxDecoration(
-        color: darkColor,
+        // color: darkColor,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -189,7 +187,7 @@ class StatisticsScreen extends StatelessWidget {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: statisticsGreen,
+          // color: statisticsGreen,
           width: 16.w,
         ),
       ],

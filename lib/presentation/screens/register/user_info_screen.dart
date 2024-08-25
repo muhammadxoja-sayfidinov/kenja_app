@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kenja_app/core/constants/colors.dart';
-import 'package:kenja_app/presentation/widgets/register/login_register_toggle.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/register/login_register_toggle.dart';
+
 import '../../../core/constants/styles.dart';
 import '../../state_management/product_provider.dart';
 import '../../state_management/tips_provider.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../../widgets/register/tips_carousel.dart';
 import 'goal_screen.dart';
 
 class UserInfoScreen extends ConsumerWidget {
@@ -49,7 +48,7 @@ class UserInfoScreen extends ConsumerWidget {
                     ),
                     height: 507.h,
                     decoration: BoxDecoration(
-                      color: mainDarkColor,
+                      // color: mainDarkColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(24.r),
                         topRight: Radius.circular(24.r),
