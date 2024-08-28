@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 import '../../../core/constants/styles.dart';
 import '../../screens/Exercises/exercise_screen.dart';
@@ -13,6 +14,7 @@ class ExercisesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isdark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,7 +29,7 @@ class ExercisesSection extends StatelessWidget {
             width: double.infinity,
             height: 250.w,
             decoration: BoxDecoration(
-              color: Colors.grey[850],
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: DecoratedBox(
@@ -54,19 +56,19 @@ class ExercisesSection extends StatelessWidget {
                               // color: lightRed,
                               borderRadius: BorderRadius.circular(16.r),
                             ),
-                            child: const Wrap(
+                            child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               alignment: WrapAlignment.spaceEvenly,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.ac_unit_rounded,
                                   weight: 16,
                                 ),
                                 Text(
                                   'Bajarilmagan',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
+                                  style: CustomTextStyle.style600.copyWith(
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
                               ],
                             ),
@@ -76,11 +78,12 @@ class ExercisesSection extends StatelessWidget {
                       children: [
                         Text(
                           'Yurish mashqlari',
-                          style: CustomTextStyle.style700,
+                          style:
+                              CustomTextStyle.style700.copyWith(color: white),
                         ),
                         16.verticalSpace,
                         MyNextBottom(
-                            // color: done ? Colors.transparent : white,
+                            color: done ? Colors.transparent : white,
                             onTap: () {
                               Navigator.push(
                                   context,

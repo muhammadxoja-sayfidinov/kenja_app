@@ -21,60 +21,58 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
   Widget build(BuildContext context) {
     final pageController = ref.watch(tipsPageControllerProvider);
 
-    return SafeArea(
-      child: Scaffold(
-        // backgroundColor: mainDarkColor,
-        body: Column(
-          children: [
-            Expanded(
-              child: TipsCarousel(
-                pageController: pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-              ),
+    return Scaffold(
+      // backgroundColor: mainDarkColor,
+      body: Column(
+        children: [
+          Expanded(
+            child: TipsCarousel(
+              pageController: pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  currentPage = index;
+                });
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  MyNextBottom(
-                    onTap: () {
-                      if (pageController.page! < 2) {
-                        pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
-                      }
-                      if (currentPage == 2) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
-                      }
-                    },
-                    text: 'Davom etish',
-                  ),
-                  currentPage < 2
-                      ? MySkipBottom(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainHome()));
-                          },
-                        )
-                      : SizedBox(
-                          width: 339.w,
-                          height: 44.h,
-                        )
-                ],
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                MyNextBottom(
+                  onTap: () {
+                    if (pageController.page! < 2) {
+                      pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease);
+                    }
+                    if (currentPage == 2) {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
+                  },
+                  text: 'Davom etish',
+                ),
+                currentPage < 2
+                    ? Column(
+                        children: [
+                          12.verticalSpace,
+                          MySkipBottom(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainHome()));
+                            },
+                          ),
+                        ],
+                      )
+                    : 48.verticalSpace
+              ],
             ),
-            24.verticalSpace,
-          ],
-        ),
+          ),
+          24.verticalSpace,
+        ],
       ),
     );
   }

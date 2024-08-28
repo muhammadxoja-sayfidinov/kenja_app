@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/constants/styles.dart';
+import '../../core/constants/colors.dart';
 
 class MyNextBottom extends StatelessWidget {
   const MyNextBottom(
@@ -20,16 +20,15 @@ class MyNextBottom extends StatelessWidget {
       width: 339.w,
       height: 44.r,
       decoration: BoxDecoration(
-          color: color,
+          color: color == Colors.white ? darkColor : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-              // color: color == Colors.white ? Colors.white : darkColor
-              )),
+              color: color == Colors.white ? darkColor : Colors.white)),
       child: TextButton(
         onPressed: onTap,
         child: Text(
           text,
-          style: CustomTextStyle.style600
+          // style: CustomTextStyle.style600.copyWith(fontSize: 16.sp)
         ),
       ),
     );

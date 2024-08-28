@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 import '../../../core/constants/styles.dart';
 
@@ -9,6 +10,8 @@ class AchievementsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Row(
@@ -22,7 +25,9 @@ class AchievementsSection extends StatelessWidget {
                 onPressed: () {},
                 child: Text(
                   'Batafsil',
-                  style: CustomTextStyle.style500,
+                  style: CustomTextStyle.style500.copyWith(
+                    color: gray,
+                  ),
                 ))
           ],
         ),

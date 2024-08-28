@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           return AdaptiveTheme(
               light: lightTheme,
               dark: darkTheme,
-              initial: savedThemeMode ?? AdaptiveThemeMode.light,
+              initial: savedThemeMode ?? AdaptiveThemeMode.dark,
               builder: (theme, darkTheme) => MaterialApp(
                     title: 'My Fitness App',
                     theme: theme,

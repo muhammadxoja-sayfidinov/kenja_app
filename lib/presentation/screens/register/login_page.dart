@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/constants/colors.dart';
 import '../../widgets/register/RegistrationForm.dart';
 import '../../widgets/register/login_form.dart';
 import '../../widgets/register/login_register_toggle.dart';
@@ -30,22 +31,25 @@ class _LoginPageState extends State<LoginPage> {
             height: 466.h,
             fit: BoxFit.cover,
           ),
+          Align(
+            heightFactor: 2.5.h,
+            // alignment: Alignment.topCenter,
+            child: Image.asset(
+              'assets/flags/logo_white.png',
+              width: 133.w,
+            ),
+          ),
           SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(height: _selectedIndex == 0 ? 210.h : 60.h),
-                Text(
-                  'Logo',
-                  style: TextStyle(
-                    fontSize: 48.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+                SizedBox(height: _selectedIndex == 0 ? 250.h : 69.h),
                 SizedBox(height: 80.h),
                 Container(
                   decoration: BoxDecoration(
-                    // color: mainDarkColor,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? mainDarkColor
+                        : Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.r),
                       topRight: Radius.circular(24.r),
