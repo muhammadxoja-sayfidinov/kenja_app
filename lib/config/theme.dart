@@ -8,10 +8,10 @@ final ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: white,
   cardColor: lightError,
   textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: darkColor),
-    bodyMedium: TextStyle(color: darkColor),
-    bodySmall: TextStyle(color: darkColor),
-    displaySmall: TextStyle(color: darkColor),
+    bodyLarge: TextStyle(color: mainDarkColor),
+    bodyMedium: TextStyle(color: mainDarkColor),
+    bodySmall: TextStyle(color: mainDarkColor),
+    displaySmall: TextStyle(color: mainDarkColor),
   ),
   colorScheme: const ColorScheme.light(
     primary: white,

@@ -38,34 +38,50 @@ class _MainHomeState extends State<MainHome> {
         body = ProfileScreen();
         break;
     }
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: SizedBox.expand(child: body),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
+        backgroundColor: isDark ? Colors.black : Colors.grey[200],
+        selectedItemColor: isDark ? Colors.white : Colors.black,
         unselectedItemColor: Colors.grey,
         currentIndex: _index,
         onTap: (newIndex) => setState(() => _index = newIndex),
         items: [
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/home.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/home.svg',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             label: 'Asosiy',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/ranking.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/ranking.svg',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             label: 'Mashqlar',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/status-up.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/status-up.svg',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             label: 'Statistika',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/Dinner.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/Dinner.svg',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             label: 'Taomlar',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/profile-circle.svg'),
+            icon: SvgPicture.asset(
+              'assets/icons/profile-circle.svg',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             label: 'Profil',
           ),
         ],

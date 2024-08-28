@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 import '../../core/constants/styles.dart';
 import '../widgets/homePage/achievements_section.dart';
@@ -11,8 +12,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(
           'App logo',
           style: CustomTextStyle.style700,
@@ -39,7 +43,7 @@ class HomeScreen extends StatelessWidget {
               // height: 375.h,
               height: 102.h,
               decoration: BoxDecoration(
-                // color: darkColor,
+                color: isDark ? darkColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: const AchievementsSection(),
@@ -49,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.w),
                 height: 334.w,
                 decoration: BoxDecoration(
-                  // color: darkColor,
+                  color: isDark ? darkColor : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: const ExercisesSection(
@@ -60,8 +64,8 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: 287.w,
               decoration: BoxDecoration(
-                // color: darkColor,
-                borderRadius: BorderRadius.circular(16.r),
+                color: isDark ? darkColor : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: const Padding(
                 padding: EdgeInsets.all(18.0),
@@ -73,7 +77,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: 278.w,
               decoration: BoxDecoration(
-                // color: darkColor,
+                color: isDark ? darkColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: const Padding(

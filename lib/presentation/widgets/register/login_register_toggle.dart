@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 class LoginRegisterToggle extends StatefulWidget {
   final Function(int) onToggle;
@@ -20,9 +22,11 @@ class _LoginRegisterToggleState extends State<LoginRegisterToggle> {
     return Container(
       padding: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? darkColor
+              : Colors.grey[200],
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: gray)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -43,16 +47,28 @@ class _LoginRegisterToggleState extends State<LoginRegisterToggle> {
           });
         },
         child: Container(
-          height: 50,
+          height: 45.w,
           decoration: BoxDecoration(
-            color: _selectedIndex == index ? Colors.white : Colors.black,
-            borderRadius: BorderRadius.circular(12.0),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? _selectedIndex == index
+                    ? Colors.white
+                    : darkColor
+                : _selectedIndex == index
+                    ? mainDarkColor
+                    : Colors.grey[200],
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Center(
             child: Text(
               text,
               style: TextStyle(
-                color: _selectedIndex == index ? Colors.black : Colors.white,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? _selectedIndex == index
+                        ? mainDarkColor
+                        : gray
+                    : _selectedIndex == index
+                        ? Colors.white
+                        : gray,
                 fontWeight: FontWeight.bold,
               ),
             ),

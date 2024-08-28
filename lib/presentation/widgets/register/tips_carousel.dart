@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../core/constants/colors.dart';
+
 class TipsCarousel extends StatefulWidget {
   final PageController pageController;
   final Function(int) onPageChanged;
@@ -46,10 +48,12 @@ class _TipsCarouselState extends State<TipsCarousel> {
         SmoothPageIndicator(
           controller: widget.pageController,
           count: 3,
-          effect: const WormEffect(
+          effect: WormEffect(
             dotWidth: 10,
             dotHeight: 10,
-            activeDotColor: Colors.white,
+            activeDotColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : mainDarkColor,
             dotColor: Colors.grey,
           ),
         ),
@@ -61,13 +65,14 @@ class _TipsCarouselState extends State<TipsCarousel> {
   Widget _buildTipPage(String text, String imagePath) {
     return Column(
       children: [
+        60.verticalSpace,
         ClipRRect(
           borderRadius: BorderRadius.circular(32.r),
           child: Image.asset(
             imagePath,
             fit: BoxFit.cover,
             width: 339.w,
-            height: 339.h,
+            height: 339.w,
           ),
         ),
         Padding(
