@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/styles.dart';
+
 class MyNextBottom extends StatelessWidget {
   const MyNextBottom(
       {super.key,
@@ -27,11 +29,7 @@ class MyNextBottom extends StatelessWidget {
         onPressed: onTap,
         child: Text(
           text,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            // color: mainDarkColor,
-          ),
+          style: CustomTextStyle.style600
         ),
       ),
     );

@@ -10,6 +10,8 @@ final ThemeData lightTheme = ThemeData(
   textTheme: const TextTheme(
     bodyLarge: TextStyle(color: darkColor),
     bodyMedium: TextStyle(color: darkColor),
+    bodySmall: TextStyle(color: darkColor),
+    displaySmall: TextStyle(color: darkColor),
   ),
   colorScheme: const ColorScheme.light(
     primary: white,
