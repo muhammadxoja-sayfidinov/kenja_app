@@ -7,6 +7,8 @@ import '../../widgets/register/login_form.dart';
 import '../../widgets/register/login_register_toggle.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -32,13 +34,12 @@ class _LoginPageState extends State<LoginPage> {
             fit: BoxFit.cover,
           ),
           Align(
-            heightFactor: 2.5.h,
-            // alignment: Alignment.topCenter,
-            child: Image.asset(
-              'assets/flags/logo_white.png',
-              width: 133.w,
-            ),
-          ),
+              heightFactor: 4.9.h,
+              // alignment: Alignment.topCenter,
+              child: Image.asset(
+                'assets/logo/logo_text.png',
+                width: 201.w,
+              )),
           SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.symmetric(horizontal: 24.w),
                         child: _selectedIndex == 0
                             ? LoginForm()
-                            : const RegistrationForm(),
+                            : RegistrationForm(),
                       ),
                       SizedBox(height: 24.h),
                     ],

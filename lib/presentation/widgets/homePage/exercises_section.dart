@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/colors.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/styles.dart';
 import '../../screens/Exercises/exercise_screen.dart';
-import '../next_bottom.dart';
 
 class ExercisesSection extends StatelessWidget {
   const ExercisesSection({super.key, required this.today, required this.done});
@@ -14,7 +15,7 @@ class ExercisesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isdark = Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,16 +54,18 @@ class ExercisesSection extends StatelessWidget {
                             padding: const EdgeInsets.all(5),
                             width: 120.w,
                             decoration: BoxDecoration(
-                              // color: lightRed,
+                              color: lightRed,
                               borderRadius: BorderRadius.circular(16.r),
                             ),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               alignment: WrapAlignment.spaceEvenly,
                               children: [
-                                const Icon(
-                                  Icons.ac_unit_rounded,
-                                  weight: 16,
+                                SvgPicture.asset(
+                                  'assets/icons/crown.svg',
+                                  colorFilter: ColorFilter.mode(
+                                      isDark ? Colors.white : mainDarkColor,
+                                      BlendMode.srcIn),
                                 ),
                                 Text(
                                   'Bajarilmagan',
@@ -82,13 +85,14 @@ class ExercisesSection extends StatelessWidget {
                               CustomTextStyle.style700.copyWith(color: white),
                         ),
                         16.verticalSpace,
-                        MyNextBottom(
+                        MyNextBottomWhite(
                             color: done ? Colors.transparent : white,
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WorkoutScreen()));
+                                      builder: (context) =>
+                                          const WorkoutScreen()));
                             },
                             text: done ? 'Bajarildi' : 'Bajarish'),
                       ],

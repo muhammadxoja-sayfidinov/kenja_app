@@ -29,7 +29,6 @@ class MealSuccessScreen extends StatelessWidget {
                 Text(
                   'Ovqatni muvaffaqiyatli tanovul qildingiz!',
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -72,7 +71,6 @@ class MealSuccessScreen extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),

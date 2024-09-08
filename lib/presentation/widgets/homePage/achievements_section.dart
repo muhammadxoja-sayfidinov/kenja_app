@@ -26,16 +26,17 @@ class AchievementsSection extends StatelessWidget {
                 child: Text(
                   'Batafsil',
                   style: CustomTextStyle.style500.copyWith(
-                    color: gray,
+                    color: grey,
                   ),
                 ))
           ],
         ),
+        7.verticalSpace,
         Row(
           children: [
             Expanded(
               child: SizedBox(
-                height: 54.w,
+                height: 56.w,
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -46,7 +47,8 @@ class AchievementsSection extends StatelessWidget {
                         width: 56.w,
                         height: 54.w,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
+                          color: Colors.grey[400],
+                          // border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Padding(

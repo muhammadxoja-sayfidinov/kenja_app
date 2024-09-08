@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final String labelText;
@@ -38,7 +39,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return TextFormField(
+      cursorColor: isDark ? white : mainDarkColor,
       controller: widget.controller,
       obscureText: _obscureText,
       validator: widget.validator,
@@ -46,21 +49,22 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       onSaved: widget.onSaved,
       initialValue: widget.initialValue,
       decoration: InputDecoration(
+        fillColor: Colors.red,
         labelText: widget.labelText,
-        labelStyle: TextStyle(
-          color: Colors.grey[600],
+        labelStyle: const TextStyle(
+          color: grey,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
           borderSide: const BorderSide(
-            color: Colors.grey,
+            color: grey,
             width: 1.0,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(
-            color: Colors.blue,
+          borderSide: BorderSide(
+            color: isDark ? white : mainDarkColor,
             width: 2.0,
           ),
         ),

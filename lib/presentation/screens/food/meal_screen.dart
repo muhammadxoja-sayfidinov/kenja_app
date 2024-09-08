@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/homePage/mealCard.dart';
 
-import '../../core/constants/styles.dart';
-import '../widgets/date_selector.dart';
+import '../../../core/constants/styles.dart';
+import '../../widgets/date_selector.dart';
 import 'meal_detail_screen.dart';
 
 class MealScreen extends StatelessWidget {

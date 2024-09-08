@@ -1,36 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/screens/payment_methods_screen.dart';
+import 'package:kenja_app/presentation/screens/subscription/payment_methods_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
+import '../../../core/constants/colors.dart';
+
 class SubscriptionScreen extends StatefulWidget {
+  const SubscriptionScreen({super.key});
+
   @override
   _SubscriptionScreenState createState() => _SubscriptionScreenState();
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
-  String selectedPlan = 'yearly'; // 'yearly' or 'monthly'
+  String selectedPlan = 'yearly'; // 'yearly' or 'monthly
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: const Alignment(0, -1.3),
         children: [
           Image.asset(
             'assets/images/SubscriptionScreen.png',
-            fit: BoxFit.cover,
             width: 375.w,
-            height: 371.h,
+            height: 375.h,
           ),
           Padding(
             padding: EdgeInsets.all(18.0.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                195.verticalSpace,
-                Text("Sog'lom turmush tarziga e'tibor o'zingizga e'tibor",
-                    style: CustomTextStyle.style700.copyWith(fontSize: 27.sp)),
+                185.verticalSpace,
+                Text("Sog'lom turmush tarziga\n e'tibor o'zingizga e'tibor",
+                    style: CustomTextStyle.style700.copyWith(fontSize: 25.sp)),
                 SizedBox(height: 20.h),
                 _buildFeatureRow(Icons.check, "Barcha mashqlarni ko'rish"),
                 SizedBox(height: 10.h),
@@ -57,7 +61,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   value: 'monthly',
                   bestValue: false,
                 ),
-                const Spacer(),
+                64.verticalSpace,
                 Center(
                   child: MyNextBottom(
                     onTap: () {
@@ -81,11 +85,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   Widget _buildFeatureRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, color: Colors.white, size: 20.w),
+        Icon(icon, size: 20.w),
         SizedBox(width: 10.w),
         Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: 16.sp),
+          style: TextStyle(fontSize: 16.sp),
         ),
       ],
     );
@@ -100,6 +104,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     required String value,
     required bool bestValue,
   }) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -109,33 +115,32 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          // color: isSelected ? darkError : mainDarkColor,
+          color: isDark
+              ? isSelected
+                  ? darkError
+                  : mainDarkColor
+              : isSelected
+                  ? Colors.red[100]
+                  : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
-          border: isSelected ? Border.all(color: Colors.red, width: 2.w) : null,
+          border: Border.all(
+              color: isDark
+                  ? isSelected
+                      ? Colors.red
+                      : grey
+                  : mainDarkColor,
+              width: 1.w),
         ),
         child: Row(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text(title, style: CustomTextStyle.style500),
                 SizedBox(height: 5.h),
                 Row(
                   children: [
-                    Text(
-                      price,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                      ),
-                    ),
+                    Text(price, style: CustomTextStyle.style400),
                     if (bestValue)
                       Padding(
                         padding: EdgeInsets.only(left: 8.w),
@@ -148,8 +153,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                           ),
                           child: Text(
                             'Best Value',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.sp),
+                            style: TextStyle(fontSize: 12.sp),
                           ),
                         ),
                       ),
@@ -167,13 +171,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       ),
                       child: Text(
                         discountText,
-                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        style: TextStyle(fontSize: 12.sp),
                       ),
                     ),
                   ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Radio<String>(
               value: value,
               groupValue: selectedPlan,

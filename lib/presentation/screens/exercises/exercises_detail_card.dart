@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/constants/colors.dart';
+
 class ExerciseDetailCard extends StatelessWidget {
   const ExerciseDetailCard(
       {super.key,
       required this.value,
       required this.unit,
-      required this.imagePath});
+      required this.imagePath,
+      required this.isDark});
+
   final String value;
   final String unit;
   final String imagePath;
+  final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +23,7 @@ class ExerciseDetailCard extends StatelessWidget {
       height: 60.h,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Colors.grey[850],
+        color: isDark ? darkColor : darker,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(

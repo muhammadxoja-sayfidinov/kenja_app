@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +8,12 @@ import 'package:kenja_app/presentation/screens/profile/profile_edit_screen.dart'
 import 'package:kenja_app/presentation/screens/profile/user_details_screen.dart';
 import 'package:kenja_app/presentation/widgets/pro_plan.dart';
 
+import '../../../core/constants/colors.dart';
 import '../../widgets/chooseLanguage.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -19,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(16.w),
@@ -91,7 +96,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onChanged: (val) {
                     setState(() {
                       val ? value = true : value = false;
-                      print(value);
+                      if (kDebugMode) {
+                        print(value);
+                      }
                     });
                     // Toggle notification action
                   },
@@ -108,6 +115,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Mening ma’lumotlarim',
                 subtitle: 'Vazn yo’qotish',
                 trailing: SvgPicture.asset(
+                  colorFilter: ColorFilter.mode(
+                      isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
                   'assets/icons/arrow-right.svg',
                   height: 24.w,
                   width: 24.w,
@@ -131,6 +140,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: 'O’zbekcha',
                 trailing: SvgPicture.asset(
                   'assets/icons/arrow-right.svg',
+                  colorFilter: ColorFilter.mode(
+                      isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
                   height: 24.w,
                   width: 24.w,
                 ),
@@ -151,6 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 24.w,
                   width: 24.w,
                   'assets/icons/arrow-right.svg',
+                  colorFilter: ColorFilter.mode(
+                      isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
                 ),
               ),
               Divider(
@@ -164,6 +177,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: '',
                 trailing: SvgPicture.asset(
                   'assets/icons/link.svg',
+                  colorFilter: ColorFilter.mode(
+                      isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
                 ),
               ),
             ],
@@ -192,6 +207,8 @@ class CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return ListTile(
         onTap: onTap,
         contentPadding: EdgeInsets.zero,
@@ -205,12 +222,13 @@ class CustomListTile extends StatelessWidget {
             ),
             child: SvgPicture.asset(
               leading,
+              colorFilter: ColorFilter.mode(
+                  isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
               // color: Colors.white,
             )),
         title: Text(
           title,
-          style: CustomTextStyle.style400
-              .copyWith(color: Colors.white, fontSize: 16.sp),
+          style: CustomTextStyle.style400.copyWith(fontSize: 16.sp),
         ),
         subtitle: subtitle != null && subtitle!.isNotEmpty
             ? Text(

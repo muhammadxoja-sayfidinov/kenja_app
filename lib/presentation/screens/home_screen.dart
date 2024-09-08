@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/colors.dart';
 
-import '../../core/constants/styles.dart';
 import '../widgets/homePage/achievements_section.dart';
 import '../widgets/homePage/exercises_section.dart';
 import '../widgets/homePage/mealCard.dart';
@@ -17,10 +16,15 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(
-          'App logo',
-          style: CustomTextStyle.style700,
-        ),
+        title: isDark
+            ? Image.asset(
+                'assets/logo/logo_text.png',
+                width: 85.w,
+              )
+            : Image.asset(
+                'assets/logo/logo_light_text.png',
+                width: 85.w,
+              ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -40,10 +44,9 @@ class HomeScreen extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              // height: 375.h,
-              height: 102.h,
+              height: 112.h,
               decoration: BoxDecoration(
-                color: isDark ? darkColor : Colors.grey[200],
+                color: isDark ? backgroundDarker : darker,
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: const AchievementsSection(),
@@ -53,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.w),
                 height: 334.w,
                 decoration: BoxDecoration(
-                  color: isDark ? darkColor : Colors.grey[200],
+                  color: isDark ? backgroundDarker : darker,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: const ExercisesSection(
@@ -64,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: 287.w,
               decoration: BoxDecoration(
-                color: isDark ? darkColor : Colors.grey[200],
+                color: isDark ? backgroundDarker : darker,
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: const Padding(
@@ -77,7 +80,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: 278.w,
               decoration: BoxDecoration(
-                color: isDark ? darkColor : Colors.grey[200],
+                color: isDark ? backgroundDarker : darker,
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: const Padding(

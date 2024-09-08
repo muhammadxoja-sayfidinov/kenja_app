@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 import 'package:kenja_app/presentation/widgets/skip_bottom.dart';
 
 import '../../state_management/tips_provider.dart';
+import '../../widgets/next_bottom.dart';
 import '../../widgets/register/tips_carousel.dart';
 import '../mainHome.dart';
 import 'login_page.dart';
@@ -19,10 +20,11 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     final pageController = ref.watch(tipsPageControllerProvider);
 
     return Scaffold(
-      // backgroundColor: mainDarkColor,
       body: Column(
         children: [
           Expanded(
@@ -39,20 +41,39 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                MyNextBottom(
-                  onTap: () {
-                    if (pageController.page! < 2) {
-                      pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    }
-                    if (currentPage == 2) {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    }
-                  },
-                  text: 'Davom etish',
-                ),
+                isDark
+                    ? MyNextBottomWhite(
+                        onTap: () {
+                          if (pageController.page! < 2) {
+                            pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.ease);
+                          }
+                          if (currentPage == 2) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          }
+                        },
+                        text: 'Davom etish',
+                      )
+                    : MyNextBottom(
+                        onTap: () {
+                          if (pageController.page! < 2) {
+                            pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.ease);
+                          }
+                          if (currentPage == 2) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          }
+                        },
+                        text: 'Davom etish',
+                      ),
                 currentPage < 2
                     ? Column(
                         children: [

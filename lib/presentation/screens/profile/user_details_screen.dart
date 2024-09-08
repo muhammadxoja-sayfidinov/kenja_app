@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/widgets/custom_text_form_field.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
@@ -9,17 +10,22 @@ import '../../widgets/custom_toggle_buttons.dart';
 import '../../widgets/edit_bottom_sheet.dart';
 
 class UserDetailsScreen extends ConsumerWidget {
+  const UserDetailsScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(userProfileProvider);
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: isDark ? backgroundDarker : darker,
         automaticallyImplyLeading: false,
-        // backgroundColor: mainDarkColor,
+        centerTitle: false,
         elevation: 0,
-        title: Text('Mening ma\'lumotlarim',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Mening ma\'lumotlarim',
+        ),
       ),
       body: ListView(
         children: [
@@ -71,11 +77,11 @@ class UserDetailsScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      title:
-          Text(title, style: TextStyle(color: Colors.white, fontSize: 16.sp)),
-      subtitle: Text(subtitle,
-          style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
-      trailing: Icon(Icons.chevron_right, color: Colors.white),
+      title: Text(title, style: TextStyle(fontSize: 16.sp)),
+      subtitle: Text(subtitle, style: TextStyle(fontSize: 14.sp)),
+      trailing: Icon(
+        Icons.chevron_right,
+      ),
       onTap: onTap,
     );
   }

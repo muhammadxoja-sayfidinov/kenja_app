@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 class CardPaymentBottomSheet extends StatefulWidget {
+  const CardPaymentBottomSheet({super.key});
+
   @override
   _CardPaymentBottomSheetState createState() => _CardPaymentBottomSheetState();
 }
@@ -51,7 +53,6 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
           Text(
             'Karta orqali to\'lash',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -84,7 +85,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Karta raqami',
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         filled: true,
         // fillColor: darkColor,
         border: OutlineInputBorder(
@@ -93,12 +94,11 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
         ),
         suffixIcon: _cardType.isNotEmpty
             ? Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Image.asset(_cardType),
               )
             : null,
       ),
-      style: TextStyle(color: Colors.white),
     );
   }
 
@@ -108,7 +108,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Amal qilish muddati',
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         filled: true,
         // fillColor: darkColor,
         border: OutlineInputBorder(
@@ -116,7 +116,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
           borderSide: BorderSide.none,
         ),
       ),
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     );
   }
 
@@ -126,7 +126,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'CVV',
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         filled: true,
         // fillColor: darkColor,
         border: OutlineInputBorder(
@@ -134,7 +134,7 @@ class _CardPaymentBottomSheetState extends State<CardPaymentBottomSheet> {
           borderSide: BorderSide.none,
         ),
       ),
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     );
   }
 }

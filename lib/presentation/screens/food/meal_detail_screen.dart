@@ -31,7 +31,6 @@ class RecipeDetailScreen extends StatelessWidget {
                     right: 8.w,
                     child: Icon(
                       Icons.play_circle_fill,
-                      color: Colors.white,
                       size: 40.sp,
                     ),
                   ),
@@ -41,7 +40,6 @@ class RecipeDetailScreen extends StatelessWidget {
               Text(
                 "Avokado va tuxumli buterbrot",
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -58,13 +56,12 @@ class RecipeDetailScreen extends StatelessWidget {
               SizedBox(height: 16.h),
               Text(
                 "Avokado va tuxumda mavjud sog'lom yog'lar (masalan, to'yinmagan yog'lar) xolesterin darajasini nazorat qilishga yordam beradi, bu yurak salomatligini qo'llab-quvvatlaydi.",
-                style: TextStyle(color: Colors.white70, fontSize: 16.sp),
+                style: TextStyle(fontSize: 16.sp),
               ),
               SizedBox(height: 16.h),
               Text(
                 "Tayyorlash",
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -129,7 +126,6 @@ class InfoCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: Colors.white70,
               fontSize: 14.sp,
             ),
           ),
@@ -155,7 +151,6 @@ class InstructionStep extends StatelessWidget {
           Text(
             step,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -164,7 +159,6 @@ class InstructionStep extends StatelessWidget {
           Text(
             description,
             style: TextStyle(
-              color: Colors.white70,
               fontSize: 16.sp,
             ),
           ),

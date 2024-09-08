@@ -29,7 +29,7 @@ class ProfileEditScreen extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 50.r,
-                    backgroundImage: AssetImage(
+                    backgroundImage: const AssetImage(
                       'assets/images/avatar.png', // Replace with your image URL
                     ),
                   ),
