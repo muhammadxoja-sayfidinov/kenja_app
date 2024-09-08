@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/colors.dart';
+
 class CustomToggleButtons extends StatefulWidget {
   final int pageIndex;
 
@@ -47,10 +49,10 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
         height: 48.w,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: isSelected ? darker : Colors.transparent,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
-            // color: isSelected ? Colors.white : gray,
+            color: isSelected ? darkColor : grey,
             width: 1.0,
           ),
         ),
@@ -58,7 +60,7 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
           child: Text(
             text,
             style: TextStyle(
-              // color: isSelected ? Colors.white : gray,
+              color: isSelected ? darkColor : grey,
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
             ),

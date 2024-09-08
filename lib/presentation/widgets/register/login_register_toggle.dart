@@ -26,7 +26,7 @@ class _LoginRegisterToggleState extends State<LoginRegisterToggle> {
               ? darkColor
               : Colors.grey[200],
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: gray)),
+          border: Border.all(color: grey)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -65,10 +65,10 @@ class _LoginRegisterToggleState extends State<LoginRegisterToggle> {
                 color: Theme.of(context).brightness == Brightness.dark
                     ? _selectedIndex == index
                         ? mainDarkColor
-                        : gray
+                        : grey
                     : _selectedIndex == index
                         ? Colors.white
-                        : gray,
+                        : grey,
                 fontWeight: FontWeight.bold,
               ),
             ),

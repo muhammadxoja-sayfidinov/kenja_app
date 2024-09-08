@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../core/constants/colors.dart';
 import '../../core/constants/styles.dart';
 import '../screens/subscription_screen.dart';
 
@@ -12,6 +13,7 @@ class ProPlan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -41,21 +43,20 @@ class ProPlan extends StatelessWidget {
                         // backgroundColor: darkColor,
                         child: SvgPicture.asset(
                           'assets/icons/crown.svg',
-                          color: Colors.white,
+                          color: isDark ? Colors.white : Colors.black,
                         )),
                     2.horizontalSpace,
                     Text('PRO PLAN',
-                        style: CustomTextStyle.style700
-                            .copyWith(color: Colors.black)),
+                        style: CustomTextStyle.style700.copyWith(
+                            color: isDark ? Colors.black : Colors.white)),
                   ],
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'Barcha mashqlarni ko\'rish imkoniyat',
-                  style: TextStyle(
-                      color: Colors.black87,
+                  style: CustomTextStyle.style400.copyWith(
                       fontSize: 12.sp,
-                      fontWeight: FontWeight.w400),
+                      color: isDark ? Colors.black : Colors.white),
                 ),
               ],
             ),
@@ -63,7 +64,7 @@ class ProPlan extends StatelessWidget {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
               decoration: BoxDecoration(
-                // color: mainDarkColor,
+                color: isDark ? mainDarkColor : Colors.white,
                 borderRadius: BorderRadius.circular(
                   20.r,
                 ),
@@ -73,8 +74,7 @@ class ProPlan extends StatelessWidget {
               child: Text(
                 'Sotib olish',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                style: CustomTextStyle.style600.copyWith(
                   fontSize: 12.sp,
                 ),
               ),

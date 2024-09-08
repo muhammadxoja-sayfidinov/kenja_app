@@ -24,11 +24,12 @@ class MyApp extends StatelessWidget {
           return AdaptiveTheme(
               light: lightTheme,
               dark: darkTheme,
-              initial: savedThemeMode ?? AdaptiveThemeMode.dark,
+              initial: AdaptiveThemeMode.system,
               builder: (theme, darkTheme) => MaterialApp(
                     title: 'My Fitness App',
                     theme: theme,
                     darkTheme: darkTheme,
+                    themeMode: ThemeMode.system,
                     home: TipsScreen(),
                     routes: {
                       '/login': (context) => LoginPage(),

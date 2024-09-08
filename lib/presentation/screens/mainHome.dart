@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/screens/meal_screen.dart';
 import 'package:kenja_app/presentation/screens/profile/main_profile.dart';
 import 'package:kenja_app/presentation/screens/statistics_screen.dart';
@@ -43,7 +44,7 @@ class _MainHomeState extends State<MainHome> {
       body: SizedBox.expand(child: body),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: isDark ? Colors.black : Colors.grey[200],
+        backgroundColor: isDark ? Colors.black.withOpacity(0.01) : darker,
         selectedItemColor: isDark ? Colors.white : Colors.black,
         unselectedItemColor: Colors.grey,
         currentIndex: _index,

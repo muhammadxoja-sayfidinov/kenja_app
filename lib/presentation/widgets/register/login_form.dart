@@ -1,81 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/colors.dart';
-import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/screens/mainHome.dart';
-import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
+import '../../../core/constants/colors.dart';
+import '../../../core/constants/styles.dart';
+import '../../screens/mainHome.dart';
 import '../custom_text_form_field.dart';
+import '../next_bottom.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class LoginForm extends ConsumerWidget {
+  LoginForm({super.key});
 
-  @override
-  _LoginFormState createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Read the controllers from the notifier
+    final usernameController =
+        ref.watch(formStateProvider.notifier).usernameController;
+    final passwordController =
+        ref.watch(formStateProvider.notifier).passwordController;
+
+    // Watch the validation state
+    final isValid = ref.watch(formStateProvider);
+
     return Form(
       key: _formKey,
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            CustomTextFormField(
-              labelText: 'Ismingiz',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Iltimos, ismingizni kiriting';
-                }
-                return null;
-              },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          CustomTextFormField(
+            controller: usernameController,
+            labelText: 'Ismingiz',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Iltimos, ismingizni kiriting';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 16.h),
+          CustomTextFormField(
+            controller: passwordController,
+            labelText: 'Parolingiz',
+            obscureText: true,
+            suffixIcon: const Icon(Icons.visibility_off),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Iltimos, parolingizni kiriting';
+              }
+              if (value.length < 8) {
+                return 'Parol kamida 8 belgidan iborat bo\'lishi kerak';
+              }
+              return null;
+            },
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/reset-password');
+            },
+            child: Text(
+              'Parolni unutdingizmi?',
+              style: CustomTextStyle.style500.copyWith(color: grey),
             ),
-            SizedBox(height: 16.h),
-            CustomTextFormField(
-              controller: _passwordController,
-              labelText: 'Parolingiz',
-              obscureText: true,
-              suffixIcon: const Icon(Icons.visibility_off),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Iltimos, parolingizni kiriting';
-                }
-                if (value.length < 8) {
-                  return 'Parol kamida 8 belgidan iborat bo\'lishi kerak';
-                }
-                return null;
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/reset-password');
-              },
-              child: Text(
-                'Parolni unutdingizmi?',
-                style: CustomTextStyle.style500.copyWith(color: gray),
-              ),
-            ),
-            25.verticalSpace,
-            MyNextBottom(
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainHome()),
-                  );
-                }
-              },
-              text: 'Kirish',
-            ),
-          ],
-        ),
+          ),
+          25.verticalSpace,
+          MyNextBottom(
+            color: isValid ? darkColor : Colors.white,
+            // Color is updated based on form state
+            onTap: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainHome()),
+                );
+              }
+            },
+            text: 'Kirish',
+          ),
+        ],
       ),
     );
   }
 }
+
+class FormStateNotifier extends StateNotifier<bool> {
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+
+  FormStateNotifier(this.usernameController, this.passwordController)
+      : super(false) {
+    // Add listeners to both controllers
+    usernameController.addListener(_validate);
+    passwordController.addListener(_validate);
+  }
+
+  // Check if both fields are not empty and update the state
+  void _validate() {
+    state = usernameController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
+  }
+
+  @override
+  void dispose() {
+    usernameController.removeListener(_validate);
+    passwordController.removeListener(_validate);
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+}
+
+// Create a provider for form validation state
+final formStateProvider = StateNotifierProvider<FormStateNotifier, bool>((ref) {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  return FormStateNotifier(usernameController, passwordController);
+});

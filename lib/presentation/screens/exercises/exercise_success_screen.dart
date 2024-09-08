@@ -48,7 +48,7 @@ class SuccessScreen extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: EdgeInsets.only(bottom: 25.h),
               child: MyNextBottom(onTap: () {}, text: 'Asosiyga qaytish'),
             ),
           ],

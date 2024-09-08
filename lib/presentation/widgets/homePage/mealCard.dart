@@ -21,10 +21,7 @@ class MealCard extends StatelessWidget {
       children: [
         Text(
           mealType,
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold),
+          style: CustomTextStyle.style700,
         ),
         SizedBox(height: 8.h),
         Container(
