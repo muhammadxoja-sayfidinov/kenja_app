@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/home_screen.dart';
+import 'package:kenja_app/presentation/screens/register/goal_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 import '../../widgets/custom_toggle_buttons.dart';
@@ -66,7 +67,7 @@ class ActivityLevelScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()),
+                                builder: (context) => GoalScreen()),
                           );
                         },
                         text: 'Davom etish')

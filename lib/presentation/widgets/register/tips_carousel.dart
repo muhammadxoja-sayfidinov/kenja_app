@@ -45,16 +45,26 @@ class _TipsCarouselState extends State<TipsCarousel> {
           ),
         ),
         16.verticalSpace,
-        SmoothPageIndicator(
-          controller: widget.pageController,
-          count: 3,
-          effect: WormEffect(
-            dotWidth: 10,
-            dotHeight: 10,
-            activeDotColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : mainDarkColor,
-            dotColor: Colors.grey,
+        Container(
+          alignment: Alignment.center,
+          height: 20.h,
+          width: 52.w,
+          decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromRGBO(27, 46, 64, 1)
+                  : darker,
+              borderRadius: BorderRadius.circular(24.r)),
+          child: SmoothPageIndicator(
+            controller: widget.pageController,
+            count: 3,
+            effect: WormEffect(
+              dotWidth: 10,
+              dotHeight: 10,
+              activeDotColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : mainDarkColor,
+              dotColor: Colors.grey,
+            ),
           ),
         ),
         16.verticalSpace
