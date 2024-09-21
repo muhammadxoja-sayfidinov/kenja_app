@@ -26,6 +26,8 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
 
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: TipsCarousel(
@@ -40,7 +42,10 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                currentPage == 2 ? 48.verticalSpace : SizedBox(),
                 isDark
                     ? MyNextBottomWhite(
                         onTap: () {
@@ -53,7 +58,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                    builder: (context) => const LoginPage()));
                           }
                         },
                         text: 'Davom etish',
@@ -88,7 +93,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
                           ),
                         ],
                       )
-                    : 48.verticalSpace
+                    : SizedBox()
               ],
             ),
           ),

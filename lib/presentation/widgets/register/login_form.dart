@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
@@ -64,25 +65,30 @@ class LoginForm extends ConsumerWidget {
             ),
           ),
           25.verticalSpace,
-          MyNextBottom(
-            color: isDark
-                ? isValid
-                    ? Colors.white12
-                    : darkColor
-                : isValid
-                    ? Colors.white12
-                    : darkColor,
-            // Color is updated based on form state
-            onTap: () {
-              if (_formKey.currentState!.validate()) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainHome()),
-                );
-              }
-            },
-            text: 'Kirish',
-          ),
+          isDark
+              ? MyNextBottomWhite(
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainHome()),
+                      );
+                    }
+                  },
+                  text: 'Kirish',
+                )
+              : MyNextBottom(
+                  color: darkColor,
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainHome()),
+                      );
+                    }
+                  },
+                  text: 'Kirish',
+                ),
         ],
       ),
     );
