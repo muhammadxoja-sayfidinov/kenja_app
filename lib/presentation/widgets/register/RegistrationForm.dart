@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../data/providers/api_controllers.dart';
 import '../../screens/register/user_info_screen.dart';
 import '../custom_text_form_field.dart';
@@ -53,7 +53,7 @@ class RegistrationForm extends ConsumerWidget {
             SizedBox(height: 16.h),
             CustomTextFormField(
               controller: phoneOrEmail,
-              labelText: 'Emailingiz yoki raqamingiz',
+              labelText: 'Email’ingiz yoki raqamingiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Iltimos, emailingiz yoki raqamingizni kiriting';
@@ -126,14 +126,25 @@ class RegistrationForm extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            MyNextBottom(
-              color: _isTermsAccepted ? Colors.white : darkColor,
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserInfoScreen()));
-              },
-              text: 'Registratsiya qilish',
-            ),
+            isDark
+                ? MyNextBottomWhite(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserInfoScreen()));
+                    },
+                    text: 'Registratsiya qilish',
+                  )
+                : MyNextBottom(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserInfoScreen()));
+                    },
+                    text: 'Registratsiya qilish',
+                  ),
           ],
         ),
       ),

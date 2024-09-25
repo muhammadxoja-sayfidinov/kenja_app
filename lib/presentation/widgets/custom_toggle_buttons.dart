@@ -39,6 +39,8 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
 
   Widget _buildToggleButton(String text, int index) {
     bool isSelected = _selectedIndex == index;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -49,18 +51,32 @@ class _CustomToggleButtonsState extends State<CustomToggleButtons> {
         height: 48.w,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: isSelected ? darker : Colors.transparent,
+          color: isSelected
+              ? isDark
+                  ? Colors.transparent
+                  : Colors.transparent
+              : isDark
+                  ? mainDarkColor
+                  : darkColor,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
-            color: isSelected ? darkColor : grey,
-            width: 1.0,
+            color: isSelected
+                ? isDark
+                    ? Colors.white
+                    : grey
+                : Colors.white,
+            width: isSelected ? 2.0 : 0.5,
           ),
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-              color: isSelected ? darkColor : grey,
+              color: isSelected
+                  ? isDark
+                      ? Colors.white
+                      : darkColor
+                  : grey,
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
             ),

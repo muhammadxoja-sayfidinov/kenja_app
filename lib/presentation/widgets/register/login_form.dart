@@ -78,7 +78,6 @@ class LoginForm extends ConsumerWidget {
                   text: 'Kirish',
                 )
               : MyNextBottom(
-                  color: darkColor,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       Navigator.pushReplacement(

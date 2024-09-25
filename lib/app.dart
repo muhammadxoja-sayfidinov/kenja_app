@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                     themeMode: ThemeMode.system,
                     home: TipsScreen(),
                     routes: {
-                      '/login': (context) => LoginPage(),
+                      '/login': (context) => const LoginPage(),
                       '/reset-password': (context) => PasswordResetPage(),
                       '/verification-code': (context) => VerificationCodePage(),
                       '/new-password': (context) => NewPasswordPage(),
