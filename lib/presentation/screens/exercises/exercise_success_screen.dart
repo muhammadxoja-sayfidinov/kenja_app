@@ -14,7 +14,7 @@ class SuccessScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,7 +61,7 @@ class SuccessScreen extends StatelessWidget {
     return Container(
       width: 100.w,
       height: 60.h,
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         // color: darkColor,
         borderRadius: BorderRadius.circular(12.0),

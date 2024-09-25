@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 import 'package:kenja_app/presentation/widgets/register/login_register_toggle.dart';
 
 import '../../../core/constants/colors.dart';
@@ -26,6 +27,7 @@ class UserInfoScreen extends ConsumerWidget {
     final age = ref.watch(ageProvider);
     final height = ref.watch(heightProvider);
     final weight = ref.watch(weightProvider);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Form(
@@ -135,19 +137,33 @@ class UserInfoScreen extends ConsumerWidget {
                             ref.read(weightProvider.notifier).state = value,
                       ),
                       24.verticalSpace,
-                      MyNextBottom(
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GoalScreen()),
-                            );
-                          }
-                        },
-                        text: ('Davom etish'),
-                      ),
+                      isDark
+                          ? MyNextBottomWhite(
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GoalScreen()),
+                                  );
+                                }
+                              },
+                              text: ('Davom etish'),
+                            )
+                          : MyNextBottom(
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GoalScreen()),
+                                  );
+                                }
+                              },
+                              text: ('Davom etish'),
+                            ),
                       24.verticalSpace,
                     ],
                   ),

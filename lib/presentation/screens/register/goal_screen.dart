@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/mainHome.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../widgets/custom_toggle_buttons.dart';
@@ -14,6 +15,7 @@ class GoalScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goal = ref.watch(goalProvider);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Stack(children: [
@@ -58,16 +60,27 @@ class GoalScreen extends ConsumerWidget {
                     pageIndex: 0,
                   ),
                   24.verticalSpace,
-                  MyNextBottom(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainHome(),
-                          ),
-                        );
-                      },
-                      text: 'Davom etish'),
+                  isDark
+                      ? MyNextBottomWhite(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MainHome(),
+                              ),
+                            );
+                          },
+                          text: 'Davom etish')
+                      : MyNextBottom(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MainHome(),
+                              ),
+                            );
+                          },
+                          text: 'Davom etish'),
                   24.verticalSpace,
                 ],
               ),
