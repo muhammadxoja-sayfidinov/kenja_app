@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/colors.dart';
 
 import '../widgets/homePage/achievements_section.dart';
@@ -28,12 +29,15 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-              weight: 22.w,
+          Padding(
+            padding:  EdgeInsets.all(8.sp),
+            child: SvgPicture.asset(
+              width: 22.w,
+              'assets/icons/notification-bing.svg',
+              colorFilter: ColorFilter.mode(
+                  isDark ? Colors.white : mainDarkColor,
+                  BlendMode.srcIn),
             ),
-            onPressed: () {},
           ),
         ],
         automaticallyImplyLeading: false,

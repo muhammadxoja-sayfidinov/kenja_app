@@ -32,7 +32,6 @@ class ExerciseDetailCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),

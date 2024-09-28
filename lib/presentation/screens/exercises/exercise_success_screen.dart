@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -28,28 +32,66 @@ class SuccessScreen extends StatelessWidget {
                 SizedBox(height: 24.h),
                 Text(
                   'Tabriklaymiz, siz birinchi mashqni muvaffaqiyatli tugatdingiz',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: CustomTextStyle.style500,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 24.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildDetailCard('1s 30min', 'Vaqt'),
-                    _buildDetailCard('50', 'Kkal'),
-                    _buildDetailCard('3L', 'Suv ichish'),
-                  ],
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    // Light background color like in the image
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  // Rounded corners
+                  child: Row(
+                    children: [
+                      _buildDetailCard('1s 30min', 'Vaqt'),
+                      const VerticalDivider(
+                        color: Colors.grey,
+                        // Divider color
+                        thickness: 1,
+                        // Divider thickness
+                        width: 20,
+
+                        // Space around the divider
+                        indent: 10,
+                        // Top padding for the divider
+                        endIndent: 10, // Bottom padding for the divider
+                      ),
+                      _buildDetailCard('50', 'Kkal'),
+                      const VerticalDivider(
+                        color: Colors.grey,
+                        // Divider color
+                        thickness: 1,
+                        // Divider thickness
+                        width: 20,
+                        // Space around the divider
+                        indent: 10,
+                        // Top padding for the divider
+                        endIndent: 10, // Bottom padding for the divider
+                      ),
+                      _buildDetailCard('3L', 'Suv ichish'),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 24.h),
               ],
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 25.h),
-              child: MyNextBottom(onTap: () {}, text: 'Asosiyga qaytish'),
+              child: isDark
+                  ? MyNextBottomWhite(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      text: 'Asosiyga qaytish')
+                  : MyNextBottom(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      text: 'Asosiyga qaytish'),
             ),
           ],
         ),
@@ -59,31 +101,17 @@ class SuccessScreen extends StatelessWidget {
 
   Widget _buildDetailCard(String value, String unit) {
     return Container(
-      width: 100.w,
+      width: 104.w,
       height: 60.h,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        // color: darkColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            unit,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14.sp,
-            ),
-          ),
+          Text(value, style: CustomTextStyle.style600),
+          Text(unit, style: CustomTextStyle.style400),
         ],
       ),
     );

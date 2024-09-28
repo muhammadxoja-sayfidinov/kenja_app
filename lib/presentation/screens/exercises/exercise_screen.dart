@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/colors.dart';
+import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/screens/Exercises/workout_detail_card.dart';
 import 'package:kenja_app/presentation/screens/exercises/exercise_success_screen.dart';
 
@@ -22,13 +23,7 @@ class WorkoutScreen extends ConsumerWidget {
           SliverAppBar(
             expandedHeight: 339.h,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                workout.title,
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              title: SizedBox(),
               background: Container(
                 height: 200.h,
                 decoration: BoxDecoration(
@@ -56,6 +51,15 @@ class WorkoutScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 8.h),
+
+                      Text(
+                        workout.title,
+                        style: TextStyle(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       SizedBox(height: 8.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,19 +119,17 @@ class WorkoutScreen extends ConsumerWidget {
                           );
                         },
                         child: Container(
+                          height: 44.h,
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.all(16.0),
+                          padding:  EdgeInsets.all(12.sp),
                           decoration: BoxDecoration(
                             color: isDark ? darkColor : darker,
                             borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(color: isDark?Colors.white:grey)
                           ),
                           child: Text(
                             '-01:29:59',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: CustomTextStyle.style500
                           ),
                         ),
                       ),

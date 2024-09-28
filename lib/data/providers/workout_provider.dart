@@ -12,20 +12,20 @@ final workoutProvider = Provider<Workout>((ref) {
     waterIntake: '~3L',
     exercises: [
       Exercise(
-        title: '1. Isinish (5-10 daqiqa)',
+        title: '1. Isinish',
         description: 'Yengil yurish yoki joyida yurishni boshlang.',
         imagePath: 'assets/images/exercise.png',
         duration: '5-10 daqiqa',
       ),
       Exercise(
-        title: '2. Asosiy Mashq (2-3 daqiqa)',
+        title: '2. Asosiy Mashq',
         description:
             'Sekin sur\'atda yugurishni boshlang va asta-sekin tezligingizni oshiring.',
         imagePath: 'assets/images/exercise.png',
         duration: '2-3 daqiqa',
       ),
       Exercise(
-        title: '3. Asosiy Mashq (2-3 daqiqa)',
+        title: '3. Asosiy Mashq',
         description:
             'Sekin sur\'atda yugurishni boshlang va asta-sekin tezligingizni oshiring.',
         imagePath: 'assets/images/exercise.png',

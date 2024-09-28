@@ -17,19 +17,32 @@ class WorkoutDetailCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8.h),
         child: Row(
           children: [
-            Image.asset(
-              exercise.imagePath,
-              width: 94.w,
-              height: 94.w,
-              fit: BoxFit.cover,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Container(
+                padding: EdgeInsets.only(left: 13.w),
+                width: 94.w,
+                height: 94.h,
+                decoration: const BoxDecoration(
+                  color: Colors.white, // Placeholder background color
+                ),
+                child: Image.asset(
+                  alignment: Alignment.center,
+                  exercise.imagePath,
+                  width: 94.w,
+                  height: 94.h,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            Flexible(
+            8.horizontalSpace,
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${exercise.title} ${exercise.duration}',
+                    '${exercise.title} (${exercise.duration})',
                     style: CustomTextStyle.style500,
                   ),
                   Text(
