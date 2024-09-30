@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 
 import '../../../core/constants/styles.dart';
 
@@ -16,6 +17,8 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,10 +56,10 @@ class MealCard extends StatelessWidget {
                   12.verticalSpace,
                   Container(
                     width: 307.w,
-                    height: 40.h,
+                    height: 40.sp,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.black54,
+                      color: isDark ? Colors.black54 : Colors.white70,
                       borderRadius: BorderRadius.circular(
                         16.r,
                       ),
@@ -68,11 +71,12 @@ class MealCard extends StatelessWidget {
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Text('$duration ', style: CustomTextStyle.style600),
+                            Text(duration, style: CustomTextStyle.style600),
                             5.horizontalSpace,
                             Text(
-                              'min',
-                              style: CustomTextStyle.style500,
+                              'Min',
+                              style: CustomTextStyle.style500
+                                  .copyWith(color: grey),
                             )
                           ],
                         ),
@@ -84,7 +88,8 @@ class MealCard extends StatelessWidget {
                             5.horizontalSpace,
                             Text(
                               'Kkall',
-                              style: CustomTextStyle.style500,
+                              style: CustomTextStyle.style500
+                                  .copyWith(color: grey),
                             )
                           ],
                         ),

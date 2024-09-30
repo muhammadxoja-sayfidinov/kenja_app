@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
@@ -40,37 +41,23 @@ class SuccessScreen extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    // Light background color like in the image
+                    color: isDark ? darkColor : Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   // Rounded corners
                   child: Row(
                     children: [
                       _buildDetailCard('1s 30min', 'Vaqt'),
-                      const VerticalDivider(
+                      Container(
                         color: Colors.grey,
-                        // Divider color
-                        thickness: 1,
-                        // Divider thickness
-                        width: 20,
-
-                        // Space around the divider
-                        indent: 10,
-                        // Top padding for the divider
-                        endIndent: 10, // Bottom padding for the divider
+                        width: 1,
+                        height: 45.h,
                       ),
                       _buildDetailCard('50', 'Kkal'),
-                      const VerticalDivider(
+                      Container(
                         color: Colors.grey,
-                        // Divider color
-                        thickness: 1,
-                        // Divider thickness
-                        width: 20,
-                        // Space around the divider
-                        indent: 10,
-                        // Top padding for the divider
-                        endIndent: 10, // Bottom padding for the divider
+                        width: 1,
+                        height: 45.h,
                       ),
                       _buildDetailCard('3L', 'Suv ichish'),
                     ],

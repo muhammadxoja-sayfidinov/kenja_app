@@ -23,7 +23,7 @@ class WorkoutScreen extends ConsumerWidget {
           SliverAppBar(
             expandedHeight: 339.h,
             flexibleSpace: FlexibleSpaceBar(
-              title: SizedBox(),
+              title: const SizedBox(),
               background: Container(
                 height: 200.h,
                 decoration: BoxDecoration(
@@ -52,7 +52,6 @@ class WorkoutScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 8.h),
-
                       Text(
                         workout.title,
                         style: TextStyle(
@@ -121,16 +120,14 @@ class WorkoutScreen extends ConsumerWidget {
                         child: Container(
                           height: 44.h,
                           alignment: Alignment.center,
-                          padding:  EdgeInsets.all(12.sp),
+                          padding: EdgeInsets.all(12.sp),
                           decoration: BoxDecoration(
-                            color: isDark ? darkColor : darker,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(color: isDark?Colors.white:grey)
-                          ),
-                          child: Text(
-                            '-01:29:59',
-                            style: CustomTextStyle.style500
-                          ),
+                              color: isDark ? darkColor : darker,
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                  color: isDark ? Colors.white : grey)),
+                          child: Text('-01:29:59',
+                              style: CustomTextStyle.style500),
                         ),
                       ),
                       24.verticalSpace,

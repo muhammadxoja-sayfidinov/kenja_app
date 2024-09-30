@@ -1,106 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
+import '../../../core/constants/colors.dart';
+import '../../widgets/next_bottom.dart';
+import '../../widgets/next_bottom_white.dart';
 import 'meal_success_screen.dart';
 
-class RecipeDetailScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+class RecipeDetailScreen extends ConsumerWidget {
+  const RecipeDetailScreen({super.key});
+
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: Image.asset(
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          expandedHeight: 300.sp,
+          flexibleSpace: FlexibleSpaceBar(
+            title: const SizedBox(),
+            background: Container(
+              height: 200.sp,
+              decoration: BoxDecoration(
+                image: const DecorationImage(
+                    image: AssetImage(
                       'assets/images/meal.png', // Your image link here
-                      height: 200.h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
                     ),
-                  ),
-                  Positioned(
-                    top: 8.h,
-                    right: 8.w,
-                    child: Icon(
-                      Icons.play_circle_fill,
-                      size: 40.sp,
-                    ),
-                  ),
-                ],
+                    fit: BoxFit.cover),
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              SizedBox(height: 16.h),
-              Text(
-                "Avokado va tuxumli buterbrot",
-                style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold,
+              child: const Center(
+                child: Icon(
+                  Icons.play_circle_fill,
+                  size: 64.0,
                 ),
               ),
-              SizedBox(height: 10.h),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InfoCard(label: "20 Min", value: "Vaqt"),
-                  InfoCard(label: "1650", value: "Kkal"),
-                  InfoCard(label: "3L", value: "Suv ichish"),
-                ],
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Avokado va tuxumda mavjud sog'lom yog'lar (masalan, to'yinmagan yog'lar) xolesterin darajasini nazorat qilishga yordam beradi, bu yurak salomatligini qo'llab-quvvatlaydi.",
-                style: TextStyle(fontSize: 16.sp),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Tayyorlash",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              const InstructionStep(
-                step: "Tuxumlarni tayyorlash:",
-                description:
-                    "Tuxumlarni suvda qaynatib yoki yumshoq qilib pishiring.\nTuz va murch bilan ziravorlang.",
-              ),
-              const InstructionStep(
-                step: "Avokadoni tayyorlash: (2-3 daqiqa)",
-                description:
-                    "Avokadoni ikkiga bo'ling, toshdan ajrating, ichki qismini qoshiq bilan ajrating.\nAvokadoni vilkalar bilan ezib, pastaga aylantiring.",
-              ),
-              const InstructionStep(
-                step: "Nonni tayyorlash: (2-3 daqiqa)",
-                description:
-                    "To'liq bug'doy noni tilimlarini tosterda yoki grilda qovuring.\nQovurilgan non ustiga zaytun yog'i surting.",
-              ),
-              const InstructionStep(
-                step: "Buterbrotni yig'ish: (2-3 daqiqa)",
-                description:
-                    "Non tilimlariga avokado pastasini surting, ustiga tuxumni qo'ying.\nQo'shimcha ziravorlar bilan bezatishingiz mumkin.",
-              ),
-              SizedBox(height: 16.h),
-              MyNextBottom(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MealSuccessScreen()),
-                    );
-                  },
-                  text: 'Qabul qilish')
-            ],
+            ),
           ),
         ),
-      ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: 1,
+            (BuildContext context, int index) {
+              return Padding(
+                padding: EdgeInsets.all(16.0.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Avokado va tuxumli buterbrot",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: isDark ? darkColor : Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      // Rounded corners
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const InfoCard(label: "20 Min", value: "Vaqt"),
+                          Container(
+                            color: Colors.grey,
+                            width: 1,
+                            height: 45.h,
+                          ),
+                          const InfoCard(label: "1650", value: "Kkal"),
+                          Container(
+                            color: Colors.grey,
+                            width: 1,
+                            height: 45.h,
+                          ),
+                          const InfoCard(label: "3L", value: "Suv ichish"),
+                        ],
+                      ),
+                    ),
+                    16.verticalSpace,
+                    Container(
+                      padding: EdgeInsets.all(12.sp),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.r),
+                          color: isDark ? backgroundDarker : darker),
+                      child: Text(
+                        "Avokado va tuxumda mavjud sog'lom yog'lar (masalan, to'yinmagan yog'lar) xolesterin darajasini nazorat qilishga yordam beradi, bu yurak salomatligini qo'llab-quvvatlaydi.",
+                        style:
+                            CustomTextStyle.style400.copyWith(fontSize: 16.sp),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text("Tayyorlash", style: CustomTextStyle.style600),
+                    SizedBox(height: 10.h),
+                    SizedBox(height: 16.h),
+                    isDark
+                        ? MyNextBottomWhite(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MealSuccessScreen()),
+                              );
+                            },
+                            text: 'Qabul qilish')
+                        : MyNextBottom(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MealSuccessScreen()),
+                              );
+                            },
+                            text: 'Qabul qilish'),
+                    24.verticalSpace,
+                  ],
+                ),
+              );
+            },
+          ),
+        )
+      ]),
     );
   }
 }

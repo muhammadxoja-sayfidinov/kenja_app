@@ -47,7 +47,7 @@ class WorkoutDetailCard extends StatelessWidget {
                   ),
                   Text(
                     exercise.description,
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),

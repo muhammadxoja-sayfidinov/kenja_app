@@ -59,3 +59,31 @@ class UserProfile {
     required this.level,
   });
 }
+
+class Recipe {
+  final String name;
+  final int preparationTime;
+  final int calories;
+  final double waterConsumption;
+  final String description;
+  final List<StepDetail> steps;
+
+  Recipe({
+    required this.name,
+    required this.preparationTime,
+    required this.calories,
+    required this.waterConsumption,
+    required this.description,
+    required this.steps,
+  });
+}
+
+class StepDetail {
+  final String title;
+  final List<String> instructions;
+
+  StepDetail({
+    required this.title,
+    required this.instructions,
+  });
+}
