@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 class MealSuccessScreen extends StatelessWidget {
   const MealSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -47,9 +50,10 @@ class MealSuccessScreen extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: MyNextBottom(onTap: () {}, text: 'Asosiyga qaytish'),
-            ),
+                padding: EdgeInsets.only(bottom: 24.0.h),
+                child: isDark
+                    ? MyNextBottomWhite(onTap: () {}, text: 'Asosiyga qaytish')
+                    : MyNextBottom(onTap: () {}, text: 'Asosiyga qaytish')),
           ],
         ),
       ),

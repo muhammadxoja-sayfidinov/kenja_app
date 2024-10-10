@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../data/providers/recipe_Provider.dart';
 import '../../widgets/next_bottom.dart';
 import '../../widgets/next_bottom_white.dart';
 import 'meal_success_screen.dart';
@@ -11,8 +12,10 @@ import 'meal_success_screen.dart';
 class RecipeDetailScreen extends ConsumerWidget {
   const RecipeDetailScreen({super.key});
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final meal = ref.watch(recipeProvider);
 
     return Scaffold(
       body: CustomScrollView(slivers: [
@@ -43,6 +46,7 @@ class RecipeDetailScreen extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             childCount: 1,
             (BuildContext context, int index) {
+              print(meal[index].description);
               return Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Column(
@@ -50,7 +54,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                   children: [
                     SizedBox(height: 16.h),
                     Text(
-                      "Avokado va tuxumli buterbrot",
+                      meal[index].name,
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.bold,
@@ -68,19 +72,25 @@ class RecipeDetailScreen extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const InfoCard(label: "20 Min", value: "Vaqt"),
+                          InfoCard(
+                              label: meal[index].preparationTime.toString(),
+                              value: "Vaqt"),
                           Container(
                             color: Colors.grey,
                             width: 1,
                             height: 45.h,
                           ),
-                          const InfoCard(label: "1650", value: "Kkal"),
+                          InfoCard(
+                              label: meal[index].calories.toString(),
+                              value: "Kkal"),
                           Container(
                             color: Colors.grey,
                             width: 1,
                             height: 45.h,
                           ),
-                          const InfoCard(label: "3L", value: "Suv ichish"),
+                          InfoCard(
+                              label: meal[index].waterConsumption.toString(),
+                              value: "Suv ichish"),
                         ],
                       ),
                     ),
@@ -91,7 +101,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16.r),
                           color: isDark ? backgroundDarker : darker),
                       child: Text(
-                        "Avokado va tuxumda mavjud sog'lom yog'lar (masalan, to'yinmagan yog'lar) xolesterin darajasini nazorat qilishga yordam beradi, bu yurak salomatligini qo'llab-quvvatlaydi.",
+                        meal[index].description,
                         style:
                             CustomTextStyle.style400.copyWith(fontSize: 16.sp),
                       ),
@@ -99,6 +109,61 @@ class RecipeDetailScreen extends ConsumerWidget {
                     SizedBox(height: 16.h),
                     Text("Tayyorlash", style: CustomTextStyle.style600),
                     SizedBox(height: 10.h),
+                    SizedBox(
+                      height: 400.sp,
+                      width: 499,
+                      child: ListView.builder(
+                          itemCount: meal[index].steps.length,
+                          itemBuilder: (context, int i) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  meal[index].steps[i].title,
+                                  style: CustomTextStyle.style500,
+                                ),
+                                Container(
+                                  width: 339.w,
+                                  margin: EdgeInsets.only(left: 3.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      ...meal[index]
+                                          .steps[i]
+                                          .instructions
+                                          .map((instruction) {
+                                        return IntrinsicHeight(
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Align(
+                                                alignment: Alignment(0, -0.6),
+                                                child: Icon(
+                                                  Icons.circle,
+                                                  size: 10,
+                                                ),
+                                              ),
+                                              4.horizontalSpace,
+                                              Expanded(
+                                                child: Text(
+                                                  " $instruction",
+                                                  softWrap: true,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ); // Har bir instruktsiyani chiqaramiz
+                                      }),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          }),
+                    ),
                     SizedBox(height: 16.h),
                     isDark
                         ? MyNextBottomWhite(
