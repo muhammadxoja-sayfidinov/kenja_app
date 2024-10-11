@@ -5,6 +5,7 @@ import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
+import '../../../data/providers/authentication_provider.dart';
 import '../../screens/mainHome.dart';
 import '../custom_text_form_field.dart';
 import '../next_bottom.dart';
@@ -13,83 +14,108 @@ class LoginForm extends ConsumerWidget {
   LoginForm({super.key});
 
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final usernameController =
-        ref.watch(formStateProvider.notifier).usernameController;
-    final passwordController =
-        ref.watch(formStateProvider.notifier).passwordController;
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
     final isValid = ref.watch(formStateProvider);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // authState o'zgarishini kuzatish
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.status == AuthStatus.authenticated) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainHome()),
+        );
+      } else if (next.status == AuthStatus.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage ?? 'Xatolik yuz berdi'),
+          ),
+        );
+      }
+    });
+
     return Form(
       key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          CustomTextFormField(
-            controller: usernameController,
-            labelText: 'Ismingiz',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Iltimos, ismingizni kiriting';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 16.h),
-          CustomTextFormField(
-            controller: passwordController,
-            labelText: 'Parolingiz',
-            obscureText: true,
-            suffixIcon: const Icon(Icons.visibility_off),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Iltimos, parolingizni kiriting';
-              }
-              if (value.length < 8) {
-                return 'Parol kamida 8 belgidan iborat bo\'lishi kerak';
-              }
-              return null;
-            },
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/reset-password');
-            },
-            child: Text(
-              'Parolni unutdingizmi?',
-              style: CustomTextStyle.style500.copyWith(color: grey),
-            ),
-          ),
-          25.verticalSpace,
-          isDark
-              ? MyNextBottomWhite(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainHome()),
-                      );
+      child: authState.status == AuthStatus.authenticating
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.red,
+            ))
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                CustomTextFormField(
+                  controller: _usernameController,
+                  labelText: 'Ismingiz',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Iltimos, ismingizni kiriting';
                     }
+                    return null;
                   },
-                  text: 'Kirish',
-                )
-              : MyNextBottom(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainHome()),
-                      );
-                    }
-                  },
-                  text: 'Kirish',
                 ),
-        ],
-      ),
+                SizedBox(height: 16.h),
+                CustomTextFormField(
+                  controller: _passwordController,
+                  labelText: 'Parolingiz',
+                  obscureText: true,
+                  suffixIcon: const Icon(Icons.visibility_off),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Iltimos, parolingizni kiriting';
+                    }
+                    return null;
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/reset-password');
+                  },
+                  child: Text(
+                    'Parolni unutdingizmi?',
+                    style: CustomTextStyle.style500.copyWith(color: grey),
+                  ),
+                ),
+                SizedBox(height: 25.h),
+                // Xatolik xabarini ko'rsatish
+                if (authState.status == AuthStatus.error)
+                  Text(
+                    authState.errorMessage ?? 'Xatolik yuz berdi',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                SizedBox(height: 10.h),
+                isDark
+                    ? MyNextBottomWhite(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await authNotifier.login(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
+                          }
+                        },
+                        text: 'Kirish',
+                      )
+                    : MyNextBottom(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await authNotifier.login(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
+                          }
+                        },
+                        text: 'Kirish',
+                      ),
+              ],
+            ),
     );
   }
 }

@@ -35,11 +35,19 @@ class UserDetailsScreen extends ConsumerWidget {
             subtitle: userProfile.gender,
             onTap: () => _showGenderBottomSheet(context, ref),
           ),
+          Divider(
+            height: 0,
+            color: isDark ? darkColor : darker,
+          ),
           _buildListTile(
             context: context,
             title: 'Yoshingiz',
             subtitle: '${userProfile.age}',
             onTap: () => _showAgeBottomSheet(context, ref),
+          ),
+          Divider(
+            height: 0,
+            color: isDark ? darkColor : darker,
           ),
           _buildListTile(
             context: context,
@@ -47,17 +55,29 @@ class UserDetailsScreen extends ConsumerWidget {
             subtitle: '${userProfile.height} sm',
             onTap: () => _showHeightBottomSheet(context, ref),
           ),
+          Divider(
+            height: 0,
+            color: isDark ? darkColor : darker,
+          ),
           _buildListTile(
             context: context,
             title: 'Og\'irligingiz',
             subtitle: '${userProfile.weight} kg',
             onTap: () => _showWeightBottomSheet(context, ref),
           ),
+          Divider(
+            height: 0,
+            color: isDark ? darkColor : darker,
+          ),
           _buildListTile(
             context: context,
             title: 'Maqsadingiz',
             subtitle: userProfile.goal,
             onTap: () => _showGoalBottomSheet(context, ref),
+          ),
+          Divider(
+            height: 0,
+            color: isDark ? darkColor : darker,
           ),
           _buildListTile(
             context: context,
@@ -79,7 +99,7 @@ class UserDetailsScreen extends ConsumerWidget {
     return ListTile(
       title: Text(title, style: TextStyle(fontSize: 16.sp)),
       subtitle: Text(subtitle, style: TextStyle(fontSize: 14.sp)),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.chevron_right,
       ),
       onTap: onTap,
@@ -99,7 +119,7 @@ class UserDetailsScreen extends ConsumerWidget {
           value: 'Erkak',
         ),
         Divider(
-          // color: darkColor,
+          color: darkColor,
           indent: 65.w,
           endIndent: 40..w,
         ), // Ikki gender orasidagi chiziq

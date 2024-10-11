@@ -45,7 +45,8 @@ class MealScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RecipeDetailScreen()),
+                                  builder: (context) =>
+                                      const RecipeDetailScreen()),
                             );
                           },
                           child: const MealCard(

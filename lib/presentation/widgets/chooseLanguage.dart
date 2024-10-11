@@ -3,13 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
+import '../../core/constants/colors.dart';
+
 void showLanguageSelectionSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
     ),
-    // backgroundColor: mainDarkColor,
+    backgroundColor: mainDarkColor,
     isScrollControlled: true,
     builder: (context) {
       return Padding(
@@ -26,6 +28,8 @@ void showLanguageSelectionSheet(BuildContext context) {
 }
 
 class LanguageSelectionSheet extends StatefulWidget {
+  const LanguageSelectionSheet({super.key});
+
   @override
   _LanguageSelectionSheetState createState() => _LanguageSelectionSheetState();
 }
@@ -58,8 +62,7 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
                 width: 36.w,
                 height: 36.w,
                 decoration: BoxDecoration(
-                    // color: darkColor,
-                    borderRadius: BorderRadius.circular(8.r)),
+                    color: darkColor, borderRadius: BorderRadius.circular(8.r)),
                 padding: EdgeInsets.all(8.w),
                 child: Image.asset(
                   languages[index]['flag']!,
@@ -93,7 +96,6 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
             );
           },
         ),
-        SizedBox(height: 16.h),
         Center(
           child: MyNextBottom(
               onTap: () {
@@ -101,6 +103,7 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
               },
               text: 'Saqlash'),
         ),
+        SizedBox(height: 25.h),
       ],
     );
   }

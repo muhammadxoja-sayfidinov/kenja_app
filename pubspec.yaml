@@ -44,6 +44,8 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   d_chart: ^2.8.0
   table_calendar: ^3.1.2
+  shared_preferences: ^2.3.2
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
