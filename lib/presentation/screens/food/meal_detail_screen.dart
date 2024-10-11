@@ -108,10 +108,8 @@ class RecipeDetailScreen extends ConsumerWidget {
                     ),
                     SizedBox(height: 16.h),
                     Text("Tayyorlash", style: CustomTextStyle.style600),
-                    SizedBox(height: 10.h),
                     SizedBox(
-                      height: 400.sp,
-                      width: 499,
+                      height: 200.h,
                       child: ListView.builder(
                           itemCount: meal[index].steps.length,
                           itemBuilder: (context, int i) {
@@ -122,43 +120,38 @@ class RecipeDetailScreen extends ConsumerWidget {
                                   meal[index].steps[i].title,
                                   style: CustomTextStyle.style500,
                                 ),
-                                Container(
-                                  width: 339.w,
-                                  margin: EdgeInsets.only(left: 3.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      ...meal[index]
-                                          .steps[i]
-                                          .instructions
-                                          .map((instruction) {
-                                        return IntrinsicHeight(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Align(
-                                                alignment: Alignment(0, -0.6),
-                                                child: Icon(
-                                                  Icons.circle,
-                                                  size: 10,
-                                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ...meal[index]
+                                        .steps[i]
+                                        .instructions
+                                        .map((instruction) {
+                                      return IntrinsicHeight(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Align(
+                                              alignment: Alignment(0, -0.6),
+                                              child: Icon(
+                                                Icons.circle,
+                                                size: 10,
                                               ),
-                                              4.horizontalSpace,
-                                              Expanded(
-                                                child: Text(
-                                                  " $instruction",
-                                                  softWrap: true,
-                                                ),
+                                            ),
+                                            4.horizontalSpace,
+                                            Expanded(
+                                              child: Text(
+                                                instruction,
+                                                softWrap: true,
                                               ),
-                                            ],
-                                          ),
-                                        ); // Har bir instruktsiyani chiqaramiz
-                                      }),
-                                    ],
-                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ); // Har bir instruktsiyani chiqaramiz
+                                    }),
+                                  ],
                                 )
                               ],
                             );
