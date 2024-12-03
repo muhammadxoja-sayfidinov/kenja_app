@@ -15,24 +15,21 @@ class LoginRequest {
 
 // login_response.dart
 class LoginResponse {
-  String message;
-  String access;
-  String refresh;
-  String sessionId;
+  final String message;
+  final String refresh;
+  final String access;
 
   LoginResponse({
     required this.message,
-    required this.access,
     required this.refresh,
-    required this.sessionId,
+    required this.access,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      message: json['message'],
-      access: json['access'],
-      refresh: json['refresh'],
-      sessionId: json['session_id'],
+      message: json['message'] ?? '',
+      refresh: json['refresh'] ?? '',
+      access: json['access'] ?? '',
     );
   }
 }
