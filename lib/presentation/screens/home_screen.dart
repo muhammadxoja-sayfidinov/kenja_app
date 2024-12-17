@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/colors.dart';
 
+import '../../data/providers/meal_provider.dart';
 import '../widgets/homePage/achievements_section.dart';
 import '../widgets/homePage/exercises_section.dart';
-import '../widgets/homePage/mealCard.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mealListAsync = ref.watch(mealListProvider);
+
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -30,13 +33,12 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           Padding(
-            padding:  EdgeInsets.all(8.sp),
+            padding: EdgeInsets.all(8.sp),
             child: SvgPicture.asset(
               width: 22.w,
               'assets/icons/notification-bing.svg',
               colorFilter: ColorFilter.mode(
-                  isDark ? Colors.white : mainDarkColor,
-                  BlendMode.srcIn),
+                  isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
             ),
           ),
         ],
@@ -68,32 +70,6 @@ class HomeScreen extends StatelessWidget {
                   done: false,
                 )),
             24.verticalSpace,
-            Container(
-              height: 287.w,
-              decoration: BoxDecoration(
-                color: isDark ? backgroundDarker : darker,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(18.0),
-                child: MealCard('Nonushta', 'Avokado va tuxumli buterbrod',
-                    'assets/images/meal.png', '20', '1550'),
-              ),
-            ),
-            24.verticalSpace,
-            Container(
-              height: 278.w,
-              decoration: BoxDecoration(
-                color: isDark ? backgroundDarker : darker,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(18.0),
-                child: MealCard('Tushlik', 'Avokado va tuxumli buterbrod',
-                    'assets/images/meal.png', '20', '1550'),
-              ),
-            ),
-            18.verticalSpace,
           ],
         ),
       ),

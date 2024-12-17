@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'authentication_provider.dart';
+import '../repositories/authentication_repository.dart';
 
 // TextEditingController for username
 final usernameProvider = Provider<TextEditingController>((ref) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
+import 'package:kenja_app/presentation/screens/register/user_info_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 import '../../../core/constants/colors.dart';
@@ -83,7 +84,11 @@ class _VerificationRegisterCodePageState
                     MyNextBottom(
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          Navigator.pushNamed(context, '/new-password');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserInfoScreen()),
+                          );
                         }
                       },
                       text: 'Davom etish',

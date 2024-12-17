@@ -11,7 +11,7 @@ import 'package:kenja_app/presentation/screens/register/verification_code_page.d
 
 import 'config/theme.dart';
 import 'data/providers/api_controllers.dart';
-import 'data/providers/authentication_provider.dart';
+import 'data/repositories/authentication_repository.dart';
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key, this.savedThemeMode});
