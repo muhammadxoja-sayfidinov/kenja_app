@@ -3,19 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/styles.dart';
+import 'package:kenja_app/presentation/screens/register/login_page.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
+import '../../../core/constants/colors.dart';
+import '../../../data/providers/api_controllers.dart';
 import '../../../data/providers/profile_provider.dart';
 
 class ProfileEditScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileProvider);
+    final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        // backgroundColor: mainDarkColor,
+        backgroundColor: mainDarkColor,
         elevation: 0,
         title: Text('Profile', style: TextStyle(color: Colors.white)),
       ),
@@ -44,7 +48,7 @@ class ProfileEditScreen extends ConsumerWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
                 decoration: BoxDecoration(
-                  // color: darkColor,
+                  color: darkColor,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Column(
@@ -83,26 +87,39 @@ class ProfileEditScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    // color: darkColor,
+                    color: darkColor,
                     borderRadius: BorderRadius.circular(12.r)),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      // backgroundColor: darkError,
-                      child: SvgPicture.asset(
-                        'assets/icons/trash.svg',
-                        width: 20.w,
+                child: InkWell(
+                  onTap: () async {
+                    await authNotifier.logout().whenComplete(
+                      () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
+                        );
+                      },
+                    );
+                  },
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: darkError,
+                        child: SvgPicture.asset(
+                          'assets/icons/trash.svg',
+                          width: 20.w,
+                        ),
                       ),
-                    ),
-                    2.horizontalSpace,
-                    Text(
-                      'Profilni o’chirish',
-                      style:
-                          CustomTextStyle.style500.copyWith(color: Colors.red),
-                    ),
-                  ],
+                      2.horizontalSpace,
+                      Text(
+                        'Profilni o’chirish',
+                        style: CustomTextStyle.style500
+                            .copyWith(color: Colors.red),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 24.h),

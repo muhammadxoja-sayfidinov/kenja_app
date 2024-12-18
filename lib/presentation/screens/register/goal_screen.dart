@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/screens/mainHome.dart';
 import 'package:kenja_app/presentation/screens/register/activity_level_screen.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
@@ -67,7 +66,7 @@ class GoalScreen extends ConsumerWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MainHome(),
+                                builder: (context) => ActivityLevelScreen(),
                               ),
                             );
                           },

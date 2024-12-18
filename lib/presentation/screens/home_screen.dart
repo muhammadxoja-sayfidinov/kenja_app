@@ -7,6 +7,7 @@ import 'package:kenja_app/core/constants/colors.dart';
 import '../../data/providers/meal_provider.dart';
 import '../widgets/homePage/achievements_section.dart';
 import '../widgets/homePage/exercises_section.dart';
+import 'NotificationScreen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -32,13 +33,23 @@ class HomeScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          Padding(
-            padding: EdgeInsets.all(8.sp),
-            child: SvgPicture.asset(
-              width: 22.w,
-              'assets/icons/notification-bing.svg',
-              colorFilter: ColorFilter.mode(
-                  isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationScreen(),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.all(8.sp),
+              child: SvgPicture.asset(
+                width: 22.w,
+                'assets/icons/notification-bing.svg',
+                colorFilter: ColorFilter.mode(
+                    isDark ? Colors.white : mainDarkColor, BlendMode.srcIn),
+              ),
             ),
           ),
         ],

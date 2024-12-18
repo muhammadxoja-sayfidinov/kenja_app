@@ -4,16 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:kenja_app/data/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class UserRepository {
   final String baseUrl =
       "https://makhteachenglish.pythonanywhere.com/api/users/profile/";
 
   Future<User> fetchUser() async {
     final prefs = await SharedPreferences.getInstance();
-    final accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTA0ODYyLCJpYXQiOjE3MzQ1MDEyNjIsImp0aSI6IjJiYjgyNWUwNzFhMzQ0ZTBhMTAyOWEzNGVkZDQ5ODVjIiwidXNlcl9pZCI6MX0.2TArBamt8t0bEbNCr2RzfwwCF1wVlPntAW0d-65jIx4';
-
+    final accessToken = prefs.getString('access_token');
 
     if (accessToken == null) {
       throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
@@ -25,24 +22,20 @@ class UserRepository {
         'Accept': 'application/json',
         'Authorization': 'Bearer $accessToken', // Tokenni yuboring
       },
-
-
     );
     print(response.body);
     print(response.runtimeType);
 
     if (response.statusCode == 200) {
-
       final Map<String, dynamic> data = jsonDecode(response.body);
       print(data);
       return User.fromJson(data);
-
     } else {
       throw Exception("Failed to load USER. Status: ${response.statusCode}");
     }
   }
 
-  Future<String?> Put(Map<String, String> params)async {
+  Future<String?> Put(Map<String, String> params) async {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('access_token');
 
@@ -50,26 +43,23 @@ class UserRepository {
     if (accessToken == null) {
       throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
     }
-    try{
-        final response = await http.put(
-          Uri.parse(baseUrl),
+    try {
+      final response = await http.put(Uri.parse(baseUrl),
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer $accessToken', // Tokenni yuboring
           },
-          body: jsonEncode(params)
-        );
-        if (response.statusCode == 200 ) {
-          print("Yangilandi");
+          body: jsonEncode(params));
+      if (response.statusCode == 200) {
+        print("Yangilandi");
 
-          return response.toString();
-        }
-
-  }catch(e){
-        print(e);
+        return response.toString();
+      }
+    } catch (e) {
+      print(e);
     }
     return null;
-}
+  }
 
   static Map<String, String> paramsUpdate(User user) {
     return {
