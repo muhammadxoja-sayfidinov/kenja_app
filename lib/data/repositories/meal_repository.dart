@@ -11,7 +11,8 @@ class MealRepository {
 
   Future<List<Meal>> fetchMeals() async {
     final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
+    // final accessToken = prefs.getString('access_token');
+    final accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTA0ODYyLCJpYXQiOjE3MzQ1MDEyNjIsImp0aSI6IjJiYjgyNWUwNzFhMzQ0ZTBhMTAyOWEzNGVkZDQ5ODVjIiwidXNlcl9pZCI6MX0.2TArBamt8t0bEbNCr2RzfwwCF1wVlPntAW0d-65jIx4';
 
     // Agar access token bo'lmasa, autentifikatsiya qiling
     if (accessToken == null) {
