@@ -36,7 +36,7 @@ class _MainHomeState extends State<MainHome> {
         body = const MealScreen();
         break;
       case 4:
-        body = const ProfileScreen();
+        body =  ProfileScreen();
         break;
     }
     bool isDark = Theme.of(context).brightness == Brightness.dark;
