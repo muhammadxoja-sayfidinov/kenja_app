@@ -35,7 +35,6 @@ class AuthState {
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(status: AuthStatus.unauthenticated)) {
-    // Ilova ishga tushganda tokenlarni tekshiramiz
     _checkAuthentication();
   }
 
@@ -59,8 +58,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> login(String emailOrPhone, String password) async {
-    final url = Uri.parse(
-        'https://makhteachenglish.pythonanywhere.com/api/users/login/');
+    final url = Uri.parse('https://owntrainer.uz/api/users/login/');
     try {
       state = state.copyWith(status: AuthStatus.authenticating);
 
@@ -77,7 +75,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(data);
-
+        // print('Access Token: ${loginResponse.access}');
         await saveTokens(loginResponse);
 
         state = state.copyWith(
@@ -88,7 +86,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final errorData = jsonDecode(response.body);
         state = state.copyWith(
           status: AuthStatus.error,
-          errorMessage: errorData['message'] ?? 'Kirish muvaffaqiyatsiz bo‘ldi',
+          errorMessage: errorData['detail'] ?? 'Kirish muvaffaqiyatsiz bo‘ldi',
         );
       }
     } catch (e) {
@@ -100,8 +98,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> register(RegisterRequest request) async {
-    final url = Uri.parse(
-        'https://makhteachenglish.pythonanywhere.com/api/users/register/');
+    final url = Uri.parse('https://owntrainer.uz/api/users/register/');
     try {
       state = state.copyWith(status: AuthStatus.authenticating);
 
@@ -124,7 +121,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           status: AuthStatus.error,
           errorMessage:
-              errorData['message'] ?? 'Roʻyxatdan oʻtishda xatolik yuz berdi',
+              errorData['detail'] ?? 'Roʻyxatdan oʻtishda xatolik yuz berdi',
         );
       }
     } catch (e) {

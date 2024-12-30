@@ -8,10 +8,13 @@ import '../../../core/constants/styles.dart';
 import '../../screens/Exercises/exercise_screen.dart';
 
 class ExercisesSection extends StatelessWidget {
-  const ExercisesSection({super.key, required this.today, required this.done});
+  const ExercisesSection({super.key, required this.categoryName});
 
-  final bool today;
-  final bool done;
+  final bool today = false;
+
+  final bool done = false;
+
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,7 @@ class ExercisesSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Yurish mashqlari',
+                          categoryName,
                           style:
                               CustomTextStyle.style700.copyWith(color: white),
                         ),

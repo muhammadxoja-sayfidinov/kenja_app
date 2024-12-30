@@ -1,21 +1,3 @@
-class Workout {
-  final String title;
-  final String description;
-  final String duration;
-  final int calories;
-  final String waterIntake;
-  final List<Exercise> exercises;
-
-  Workout({
-    required this.title,
-    required this.description,
-    required this.duration,
-    required this.calories,
-    required this.waterIntake,
-    required this.exercises,
-  });
-}
-
 class Exercise {
   final String title;
   final String description;

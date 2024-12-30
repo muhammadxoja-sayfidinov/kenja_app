@@ -47,7 +47,10 @@ class MealScreen extends ConsumerWidget {
             );
           },
         ),
-        loading: () => Center(child: CircularProgressIndicator()),
+        loading: () => const Center(
+            child: CircularProgressIndicator(
+          color: Colors.red,
+        )),
         error: (err, stack) => Center(child: Text("Xatolik yuz berdi: $err")),
       ),
     );

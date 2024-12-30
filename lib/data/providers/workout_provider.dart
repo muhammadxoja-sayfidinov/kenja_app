@@ -1,37 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/product_model.dart';
+import '../models/workout_categories.dart';
+import '../repositories/workout_categories_repository.dart';
 
-final workoutProvider = Provider<Workout>((ref) {
-  return Workout(
-    title: 'Yurish mashqlari',
-    description:
-        'Yurish mashqi sizning umumiy sog‘ligingizni yaxshilash, quvvat va chidamlilikni oshirish uchun ajoyib usul hisoblanadi. Quyidagi qadamlarga o‘rgatib samarali yurish mashqi o‘tkazing:',
-    duration: '1s 30min',
-    calories: 50,
-    waterIntake: '~3L',
-    exercises: [
-      Exercise(
-        title: '1. Isinish',
-        description: 'Yengil yurish yoki joyida yurishni boshlang.',
-        imagePath: 'assets/images/exercise.png',
-        duration: '5-10 daqiqa',
-      ),
-      Exercise(
-        title: '2. Asosiy Mashq',
-        description:
-            'Sekin sur\'atda yugurishni boshlang va asta-sekin tezligingizni oshiring.',
-        imagePath: 'assets/images/exercise.png',
-        duration: '2-3 daqiqa',
-      ),
-      Exercise(
-        title: '3. Asosiy Mashq',
-        description:
-            'Sekin sur\'atda yugurishni boshlang va asta-sekin tezligingizni oshiring.',
-        imagePath: 'assets/images/exercise.png',
-        duration: '2-3 daqiqa',
-      ),
-      // Add more exercises as needed
-    ],
-  );
+final workoutCategoryRepositoryProvider =
+    Provider((ref) => WorkoutCategoryRepository());
+
+final workoutCategoryListProvider =
+    FutureProvider<List<WorkoutCategory>>((ref) async {
+  final repository = ref.read(workoutCategoryRepositoryProvider);
+  return await repository.fetchWorkoutCategories();
 });

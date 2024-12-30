@@ -17,52 +17,24 @@ class Meal {
     required this.foodPhoto,
   });
 
-  // JSON'dan obyektga
   factory Meal.fromJson(Map<String, dynamic> json) {
+    // detail API uchun 'meal' key bo'lsa uni olamiz, bo'lmasa butun jsonni
+    final data = json.containsKey('meal') ? json['meal'] : json;
+
     return Meal(
-      id: json['id'],
-      mealType: json['meal_type'],
-      foodName: json['food_name'],
-      calories: double.parse(json['calories'].toString()),
-      waterContent: double.parse(json['water_content'].toString()),
-      preparationTime: json['preparation_time'],
-      foodPhoto: json['food_photo'],
+      id: data['id'],
+      mealType: data['meal_type'],
+      foodName: data['food_name'],
+      calories: double.parse(data['calories'].toString()),
+      waterContent: double.parse(data['water_content'].toString()),
+      preparationTime: data['preparation_time'],
+      foodPhoto: data['food_photo'],
     );
   }
 
-  // Obyektdan JSON'ga
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'meal_type': mealType,
-      'food_name': foodName,
-      'calories': calories,
-      'water_content': waterContent,
-      'preparation_time': preparationTime,
-      'food_photo': foodPhoto,
-    };
-  }
-}
-
-class MealDetail {
-  final String id;
-  final String name;
-  final String description;
-  final String imageUrl;
-
-  MealDetail({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  factory MealDetail.fromJson(Map<String, dynamic> json) {
-    return MealDetail(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      imageUrl: json['image_url'],
-    );
+  // List uchun helper method
+  static List<Meal> fromJsonList(Map<String, dynamic> json) {
+    final list = json['meals'] as List;
+    return list.map((item) => Meal.fromJson(item)).toList();
   }
 }

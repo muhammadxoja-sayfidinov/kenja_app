@@ -5,80 +5,96 @@ import 'package:kenja_app/data/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-  final String baseUrl =
-      "https://makhteachenglish.pythonanywhere.com/api/users/profile/";
+  final String baseUrl = "https://owntrainer.uz/api/users/profile/";
 
+  // Foydalanuvchi ma'lumotlarini olish
   Future<User> fetchUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
-
-    if (accessToken == null) {
-      throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
-    }
-
-    final response = await http.get(
-      Uri.parse(baseUrl),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $accessToken', // Tokenni yuboring
-      },
-    );
-    print(response.body);
-    print(response.runtimeType);
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      print(data);
-      return User.fromJson(data);
-    } else {
-      throw Exception("Failed to load USER. Status: ${response.statusCode}");
-    }
-  }
-
-  Future<String?> Put(Map<String, String> params) async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
-
-    // Agar access token bo'lmasa, autentifikatsiya qiling
-    if (accessToken == null) {
-      throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
-    }
+    final accessToken = await _getAccessToken();
     try {
-      final response = await http.put(Uri.parse(baseUrl),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $accessToken', // Tokenni yuboring
-          },
-          body: jsonEncode(params));
-      if (response.statusCode == 200) {
-        print("Yangilandi");
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: _buildHeaders(accessToken),
+      );
 
-        return response.toString();
+      print("Response status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return User.fromJson(data);
+      } else if (response.statusCode == 403) {
+        throw Exception("403 xatolik: Ruxsat etilmagan so‘rov.");
+      } else {
+        throw Exception("Xatolik yuz berdi: ${response.statusCode}");
       }
     } catch (e) {
-      print(e);
+      print("Xatolik: $e");
+      throw Exception("Xatolik yuz berdi: $e");
     }
-    return null;
   }
 
-  static Map<String, String> paramsUpdate(User user) {
+  // Foydalanuvchi ma'lumotlarini yangilash
+  Future<bool> updateUser(User user) async {
+    final accessToken = await _getAccessToken();
+    final params = _paramsFromUser(user);
+
+    try {
+      final response = await http.put(
+        Uri.parse(baseUrl),
+        headers: _buildHeaders(accessToken),
+        body: jsonEncode(params),
+      );
+
+      if (response.statusCode == 200) {
+        print("Foydalanuvchi ma'lumotlari muvaffaqiyatli yangilandi.");
+        return true;
+      } else {
+        print("Yangilashda xatolik: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Xatolik yuz berdi: $e");
+      return false;
+    }
+  }
+
+  // Tokenni olish
+  Future<String> _getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    if (accessToken == null) {
+      throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
+    }
+    print("Token: $accessToken"); // Debug uchun tokenni chop qilamiz
+    return accessToken;
+  }
+
+  // Headerlarni yaratish
+  Map<String, String> _buildHeaders(String accessToken) {
     return {
-      'id': user.id.toString(),
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  // Foydalanuvchi obyektidan parametrlarni yaratish
+  Map<String, dynamic> _paramsFromUser(User user) {
+    return {
       "first_name": user.firstName,
       "last_name": user.lastName,
       "email_or_phone": user.emailOrPhone,
       "gender": user.gender,
       "country": user.country,
-      "age": user.age.toString(),
-      "height": user.height.toString(),
-      "weight": user.weight.toString(),
+      "age": user.age,
+      "height": user.height,
+      "weight": user.weight,
       "goal": user.goal,
       "level": user.level,
-      "is_premium": user.isPremium.toString(),
+      "is_premium": user.isPremium,
       "photo": user.photo,
       "language": user.language,
-      "date_joined": user.dateJoined.toIso8601String(),
-      "is_active": user.isActive.toString(),
+      "is_active": user.isActive,
     };
   }
 }
