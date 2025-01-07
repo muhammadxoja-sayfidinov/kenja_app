@@ -42,7 +42,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('access_token');
     final refreshToken = prefs.getString('refresh_token');
-
     if (accessToken != null && refreshToken != null) {
       state = AuthState(
         status: AuthStatus.authenticated,
@@ -55,6 +54,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } else {
       state = AuthState(status: AuthStatus.unauthenticated);
     }
+  }
+
+  Future<Map<String, String>> _getHeaders(
+      Map<String, String>? additionalHeaders) async {
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    if (accessToken != null && accessToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $accessToken';
+    }
+
+    if (additionalHeaders != null) {
+      headers.addAll(additionalHeaders);
+    }
+
+    return headers;
   }
 
   Future<void> login(String emailOrPhone, String password) async {
@@ -75,7 +95,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(data);
-        // print('Access Token: ${loginResponse.access}');
         await saveTokens(loginResponse);
 
         state = state.copyWith(
@@ -86,7 +105,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final errorData = jsonDecode(response.body);
         state = state.copyWith(
           status: AuthStatus.error,
-          errorMessage: errorData['detail'] ?? 'Kirish muvaffaqiyatsiz bo‘ldi',
+          errorMessage: errorData['detail'] ?? 'Kirish muvaffaqiyatsiz bo\'ldi',
         );
       }
     } catch (e) {
@@ -94,6 +113,91 @@ class AuthNotifier extends StateNotifier<AuthState> {
         status: AuthStatus.error,
         errorMessage: 'Xatolik yuz berdi: $e',
       );
+    }
+  }
+
+  Future<http.Response> post(
+    String endpoint,
+    dynamic body, {
+    Map<String, String>? headers,
+  }) async {
+    return _sendRequest(() async => http.post(
+          Uri.parse("https://owntrainer.uz$endpoint"),
+          body: jsonEncode(body),
+          headers: await _getHeaders(headers),
+        ));
+  }
+
+  Future<http.Response> get(
+    String endpoint, {
+    Map<String, String>? headers,
+  }) async {
+    return _sendRequest(() async => http.get(
+          Uri.parse("https://owntrainer.uz$endpoint"),
+          headers: await _getHeaders(headers),
+        ));
+  }
+
+  Future<http.Response> _sendRequest(
+      Future<http.Response> Function() request) async {
+    try {
+      final response = await request();
+
+      if (response.statusCode == 401) {
+        // Token has expired, attempt to refresh
+        final refreshSuccess = await _refreshToken();
+
+        if (refreshSuccess) {
+          // Retry the original request with the new token
+          return await request();
+        }
+      }
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> _refreshToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final refreshToken = prefs.getString('refresh_token');
+
+      if (refreshToken == null) {
+        return false;
+      }
+
+      final response = await http.post(
+        Uri.parse('https://owntrainer.uz/api/token/refresh/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({'refresh': refreshToken}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        // Kerak bo'lsa, yangi access token
+        if (data['access'] != null) {
+          await prefs.setString('access_token', data['access']);
+        }
+
+        // Agar server qayta "refresh" token ham yuborsa, uni ham saqlash
+        if (data['refresh'] != null) {
+          await prefs.setString('refresh_token', data['refresh']);
+        }
+        return true;
+      }
+
+      // Agar refresh ham o‘tmasa, tokenlarni o‘chirib tashlaymiz.
+      await prefs.remove('access_token');
+      await prefs.remove('refresh_token');
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 

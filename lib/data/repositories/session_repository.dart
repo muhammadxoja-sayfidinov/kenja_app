@@ -3,105 +3,93 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/meal.dart.dart';
-import '../models/session.dart';
+import '../models/meal_model.dart';
+import '../models/session_model.dart';
 import '../models/workout_categories.dart';
 
+Future<String> _getAccessToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  final accessToken = prefs.getString('access_token');
+  if (accessToken == null) {
+    throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
+  }
+  return accessToken;
+}
+
 class SessionRepository {
-  final String baseUrl = "https://owntrainer.uz/api/exercise/api";
-  final String mealBaseUrl = "https://owntrainer.uz/api/food/api";
+  final String baseUrl;
 
-  Future<Map<String, String>> _getHeaders() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final accessToken = prefs.getString('access_token');
+  SessionRepository({required this.baseUrl});
 
-      if (accessToken == null) {
-        throw Exception('Token topilmadi. Iltimos, qaytadan tizimga kiring');
-      }
+  Future<List<Session>> fetchSessions() async {
+    final accessToken = await _getAccessToken();
 
-      return {
+    final url = Uri.parse('$baseUrl/exercise/api/sessions/');
+    final response = await http.get(
+      url,
+      headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json',
-      };
-    } catch (e) {
-      throw Exception('Autentifikatsiya xatoligi: $e');
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final sessionsJson = data['sessions'] as List<dynamic>;
+      return sessionsJson.map((e) => Session.fromJson(e)).toList();
+    } else {
+      throw Exception('Sessionsni o‘qishda xatolik: ${response.statusCode}');
     }
   }
+}
 
-  Future<List<Session>> fetchSessions() async {
-    try {
-      final headers = await _getHeaders();
-      final response = await http.get(
-        Uri.parse('$baseUrl/sessions/'),
-        headers: headers,
-      );
+class WorkoutCategoryRepository {
+  final String baseUrl;
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData.containsKey("sessions")) {
-          final List<dynamic> data = responseData["sessions"];
-          return data.map((session) => Session.fromJson(session)).toList();
-        } else {
-          throw Exception("API javobida 'sessions' maydoni topilmadi");
-        }
-      } else if (response.statusCode == 401) {
-        throw Exception("Sizning sessiyangiz eskirgan. Qaytadan kiring");
-      } else {
-        throw Exception("Server xatoligi: ${response.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Ma'lumotlarni yuklashda xatolik: $e");
+  WorkoutCategoryRepository({required this.baseUrl});
+
+  /// Masalan, bitta ID ga ko‘ra olmoqchi bo‘lsak:
+  Future<WorkoutCategory> fetchWorkoutCategoryById(int id) async {
+    final accessToken = await _getAccessToken();
+    final url = Uri.parse('$baseUrl/exercise/api/workout-categories/$id/');
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return WorkoutCategory.fromJson(data['workout_category']);
+    } else {
+      throw Exception('WorkoutCategoryni o‘qishda xatolik');
     }
   }
+}
 
-  Future<WorkoutCategory> fetchWorkoutById(int id) async {
-    try {
-      final headers = await _getHeaders();
-      final response = await http.get(
-        Uri.parse('$baseUrl/workout-categories/$id/'),
-        headers: headers,
-      );
+class MealRepository {
+  final String baseUrl;
 
-      print('Workout Response (ID: $id): ${response.body}'); // Debug uchun
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        print('Parsed Response Data: $responseData'); // Debug uchun
-        return WorkoutCategory.fromJson(responseData);
-      } else {
-        print('Error Status Code: ${response.statusCode}'); // Debug uchun
-        throw Exception("Workout yuklashda xatolik: ${response.statusCode}");
-      }
-    } catch (e) {
-      print('Exception while fetching workout: $e'); // Debug uchun
-      throw Exception("Workout ma'lumotlarini yuklashda xatolik: $e");
-    }
-  }
+  MealRepository({required this.baseUrl});
 
   Future<Meal> fetchMealById(int id) async {
-    try {
-      final headers = await _getHeaders();
-      final response = await http.get(
-        Uri.parse('$mealBaseUrl/meals/$id/'),
-        headers: headers,
-      );
-
-      print('Meal Response (ID: $id): ${response.body}'); // Debug uchun
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        print('Parsed Meal Data: $responseData'); // Debug uchun
-        return Meal.fromJson(responseData);
-      } else {
-        print(
-            'Error Status Code for Meal: ${response.statusCode}'); // Debug uchun
-        throw Exception("Taom yuklashda xatolik: ${response.statusCode}");
-      }
-    } catch (e) {
-      print('Exception while fetching meal: $e'); // Debug uchun
-      throw Exception("Taom ma'lumotlarini yuklashda xatolik: $e");
+    final accessToken = await _getAccessToken();
+    final url = Uri.parse('$baseUrl/food/api/meals/$id/');
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Meal.fromJson(data['meal']);
+    } else {
+      throw Exception('Mealni o‘qishda xatolik');
     }
   }
 }

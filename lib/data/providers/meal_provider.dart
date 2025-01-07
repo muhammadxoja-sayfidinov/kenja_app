@@ -1,11 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/meal.dart.dart';
+import '../models/meal_model.dart';
 import '../repositories/meal_repository.dart';
 
-final mealRepositoryProvider = Provider((ref) => MealRepository());
+/// Birorta `MealsService` ni Provider orqali ta’minlash
+final mealsServiceProvider = Provider<MealsService>((ref) {
+  return MealsService();
+});
 
-final mealListProvider = FutureProvider<List<Meal>>((ref) async {
-  final mealRepository = ref.read(mealRepositoryProvider);
-  return await mealRepository.fetchMeals();
+/// FutureProvider: API’dan ma’lumotni olib keladigan provider
+final mealsFutureProvider = FutureProvider<List<Meal>>((ref) async {
+  final service = ref.watch(mealsServiceProvider);
+  return service.fetchMeals();
 });

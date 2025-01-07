@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/styles.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../../data/providers/recipe_Provider.dart';
+import '../../../core/constants/styles.dart';
+import '../../../data/models/meal_model.dart';
 import '../../widgets/next_bottom.dart';
 import '../../widgets/next_bottom_white.dart';
 import 'meal_success_screen.dart';
 
-class RecipeDetailScreen extends ConsumerWidget {
-  const RecipeDetailScreen({super.key});
+class MealDetailPage extends ConsumerWidget {
+  final Meal meal;
+
+  const MealDetailPage({super.key, required this.meal});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final meal = ref.watch(recipeProvider);
 
     return Scaffold(
       body: CustomScrollView(slivers: [
@@ -25,9 +26,9 @@ class RecipeDetailScreen extends ConsumerWidget {
             title: const SizedBox(),
             background: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                    image: AssetImage(
-                      'assets/images/meal.png', // Your image link here
+                image: DecorationImage(
+                    image: NetworkImage(
+                      meal.foodPhoto, // your image link here
                     ),
                     fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(12.0),
@@ -39,7 +40,6 @@ class RecipeDetailScreen extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             childCount: 1,
             (BuildContext context, int index) {
-              print(meal[index].description);
               return Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Column(
@@ -47,7 +47,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                   children: [
                     SizedBox(height: 16.h),
                     Text(
-                      meal[index].name,
+                      meal.foodName,
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InfoCard(
-                              label: meal[index].preparationTime.toString(),
+                              label: meal.preparationTime.toString(),
                               value: "Vaqt"),
                           Container(
                             color: Colors.grey,
@@ -74,7 +74,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                             height: 45.h,
                           ),
                           InfoCard(
-                              label: meal[index].calories.toString(),
+                              label: meal.calories.toString().split('.0')[0],
                               value: "Kkal"),
                           Container(
                             color: Colors.grey,
@@ -82,7 +82,8 @@ class RecipeDetailScreen extends ConsumerWidget {
                             height: 45.h,
                           ),
                           InfoCard(
-                              label: meal[index].waterConsumption.toString(),
+                              label:
+                                  meal.waterContent.toString().split('.0')[0],
                               value: "Suv ichish"),
                         ],
                       ),
@@ -94,7 +95,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16.r),
                           color: isDark ? backgroundDarker : darker),
                       child: Text(
-                        meal[index].description,
+                        meal.preparationTime.toString(),
                         style:
                             CustomTextStyle.style400.copyWith(fontSize: 16.sp),
                       ),
@@ -104,22 +105,21 @@ class RecipeDetailScreen extends ConsumerWidget {
                     SizedBox(
                       height: 200.h,
                       child: ListView.builder(
-                          itemCount: meal[index].steps.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: meal.preparations[index].steps.length,
                           itemBuilder: (context, int i) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  meal[index].steps[i].title,
+                                  meal.preparations[index].steps[i].title,
                                   style: CustomTextStyle.style500,
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    ...meal[index]
-                                        .steps[i]
-                                        .instructions
+                                    ...meal.preparations[index].steps
                                         .map((instruction) {
                                       return IntrinsicHeight(
                                         child: Row(
@@ -136,7 +136,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                                             4.horizontalSpace,
                                             Expanded(
                                               child: Text(
-                                                instruction,
+                                                'instruction',
                                                 softWrap: true,
                                               ),
                                             ),

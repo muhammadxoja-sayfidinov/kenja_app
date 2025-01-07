@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 
-import '../../../data/models/product_model.dart';
+import '../../../data/models/exercise_model.dart';
 
 class WorkoutDetailCard extends StatelessWidget {
   final Exercise exercise;
@@ -28,7 +28,7 @@ class WorkoutDetailCard extends StatelessWidget {
                 ),
                 child: Image.asset(
                   alignment: Alignment.center,
-                  exercise.imagePath,
+                  'assets/images/exercise.png',
                   width: 94.w,
                   height: 94.h,
                   fit: BoxFit.cover,
@@ -42,7 +42,7 @@ class WorkoutDetailCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${exercise.title} (${exercise.duration})',
+                    '${exercise.name} (${exercise.exerciseTime})',
                     style: CustomTextStyle.style500,
                   ),
                   Text(

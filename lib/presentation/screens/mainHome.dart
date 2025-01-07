@@ -5,7 +5,7 @@ import 'package:kenja_app/presentation/screens/food/meal_screen.dart';
 import 'package:kenja_app/presentation/screens/profile/main_profile.dart';
 import 'package:kenja_app/presentation/screens/statistics_screen.dart';
 
-import 'exercises/exercises_screen.dart';
+import 'exercises/workout_screen.dart';
 import 'home_screen.dart';
 
 class MainHome extends StatefulWidget {
@@ -27,7 +27,7 @@ class _MainHomeState extends State<MainHome> {
         body = const HomeScreen();
         break;
       case 1:
-        body = const ExercisesScreen();
+        body = const WorkoutScreen();
         break;
       case 2:
         body = const StatisticsScreen();
@@ -36,7 +36,7 @@ class _MainHomeState extends State<MainHome> {
         body = const MealScreen();
         break;
       case 4:
-        body =  ProfileScreen();
+        body = ProfileScreen();
         break;
     }
     bool isDark = Theme.of(context).brightness == Brightness.dark;

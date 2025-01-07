@@ -1,88 +1,76 @@
-// lib/providers/session_providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kenja_app/data/models/workout_categories.dart';
 
-import '../models/meal.dart.dart';
-import '../models/session.dart';
+import '../models/meal_model.dart';
+import '../models/session_model.dart';
+import '../models/workout_categories.dart';
 import '../repositories/session_repository.dart';
 
-final sessionRepositoryProvider = Provider((ref) => SessionRepository());
-
-// Sessions provider
-final sessionListProvider = FutureProvider<List<Session>>((ref) async {
-  final repository = ref.read(sessionRepositoryProvider);
-  return await repository.fetchSessions();
+/// Asosiy bazaviy URL
+final baseUrlProvider = Provider<String>((ref) {
+  return 'https://owntrainer.uz/api'; // misol uchun
 });
 
-// Workout provider by ID
-final workoutByIdProvider =
-    FutureProvider.family<WorkoutCategory, int>((ref, id) async {
-  final repository = ref.read(sessionRepositoryProvider);
-  return await repository.fetchWorkoutById(id);
+/// Session repository provayderi
+final sessionRepositoryProvider = Provider<SessionRepository>((ref) {
+  final baseUrl = ref.watch(baseUrlProvider);
+  return SessionRepository(baseUrl: baseUrl);
 });
 
-// Meal provider by ID
-final mealByIdProvider = FutureProvider.family<Meal, int>((ref, id) async {
-  final repository = ref.read(sessionRepositoryProvider);
-  return await repository.fetchMealById(id);
+/// Workout Category repository provayderi
+final workoutCategoryRepositoryProvider =
+    Provider<WorkoutCategoryRepository>((ref) {
+  final baseUrl = ref.watch(baseUrlProvider);
+  return WorkoutCategoryRepository(baseUrl: baseUrl);
 });
 
-// Combined session data provider
-final sessionDetailsProvider =
-    FutureProvider.family<SessionDetails, Session>((ref, session) async {
-  final repository = ref.read(sessionRepositoryProvider);
+/// Meal repository provayderi
+final mealRepositoryProvider = Provider<MealRepository>((ref) {
+  final baseUrl = ref.watch(baseUrlProvider);
+  return MealRepository(baseUrl: baseUrl);
+});
 
-  try {
-    // Har bir ID uchun alohida try-catch
-    final workouts = await Future.wait(session.exercises.map((id) async {
-      try {
-        return await repository.fetchWorkoutById(id);
-      } catch (e) {
-        print('Error fetching workout $id: $e');
-        return WorkoutCategory(
-            id: id,
-            categoryName: 'Not available',
-            description: 'Failed to load');
-      }
-    }));
+/// Sessions ma'lumotini oladigan future provider
+final sessionsFutureProvider = FutureProvider<List<Session>>((ref) async {
+  final repo = ref.watch(sessionRepositoryProvider);
+  return repo.fetchSessions();
+});
 
-    final meals = await Future.wait(session.meals.map((id) async {
-      try {
-        return await repository.fetchMealById(id);
-      } catch (e) {
-        print('Error fetching meal $id: $e');
-        return Meal(
-          id: id,
-          mealType: 'Not available',
-          foodName: 'Failed to load',
-          calories: 0,
-          waterContent: 0,
-          preparationTime: 0,
-          foodPhoto: '',
-        );
-      }
-    }));
+/// Hammasini birlashtirib beradigan provider
+final combinedSessionDetailProvider =
+    FutureProvider.autoDispose<List<SessionDetail>>((ref) async {
+  // 1) Avval session’larni olamiz
+  final sessions = await ref.watch(sessionsFutureProvider.future);
 
-    return SessionDetails(
+  // 2) Repozitoriyalar
+  final workoutRepo = ref.watch(workoutCategoryRepositoryProvider);
+  final mealRepo = ref.watch(mealRepositoryProvider);
+
+  // 3) Har bir session uchun exercises va meals’ni so‘rov qilish
+  final List<SessionDetail> result = [];
+
+  for (final session in sessions) {
+    // session.exercises = [2, ...]
+    final exercisesData = <WorkoutCategory>[];
+    for (final exerciseId in session.exercises) {
+      final exercise = await workoutRepo.fetchWorkoutCategoryById(exerciseId);
+      exercisesData.add(exercise);
+    }
+
+    // session.meals = [2, ...]
+    final mealsData = <Meal>[];
+    for (final mealId in session.meals) {
+      final meal = await mealRepo.fetchMealById(mealId);
+      mealsData.add(meal);
+    }
+
+    final sessionDetail = SessionDetail(
       session: session,
-      workouts: workouts,
-      meals: meals,
+      workoutCategories: exercisesData,
+      meals: mealsData,
     );
-  } catch (e) {
-    print('Error in sessionDetailsProvider: $e');
-    throw e;
+
+    result.add(sessionDetail);
   }
+
+  return result;
 });
-
-// Data class to hold all session related data
-class SessionDetails {
-  final Session session;
-  final List<WorkoutCategory> workouts;
-  final List<Meal> meals;
-
-  SessionDetails({
-    required this.session,
-    required this.workouts,
-    required this.meals,
-  });
-}

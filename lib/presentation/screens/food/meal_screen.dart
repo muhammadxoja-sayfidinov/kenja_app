@@ -5,13 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/styles.dart';
 import '../../../data/providers/meal_provider.dart';
 import '../../widgets/homePage/mealCard.dart';
+import 'meal_detail_screen.dart';
 
 class MealScreen extends ConsumerWidget {
   const MealScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mealListAsync = ref.watch(mealListProvider);
+    final mealsAsyncValue = ref.watch(mealsFutureProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,92 +33,44 @@ class MealScreen extends ConsumerWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: mealListAsync.when(
-        data: (meals) => ListView.builder(
-          itemCount: meals.length,
-          itemBuilder: (context, index) {
-            final meal = meals[index];
-            return MealCard(
-              foodName: meal.foodName,
-              waterContent: meal.waterContent,
-              preparationTime: meal.preparationTime,
-              foodPhoto: meal.foodPhoto,
-              mealType: meal.mealType,
-              calories: meal.calories,
-            );
-          },
+      body: Padding(
+        padding: EdgeInsets.all(8.sp),
+        child: mealsAsyncValue.when(
+          data: (meals) => ListView.builder(
+            itemCount: meals.length,
+            itemBuilder: (context, index) {
+              final meal = meals[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MealDetailPage(
+                          meal: meal,
+                        ),
+                      ));
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.05.sp),
+                  child: MealCard(
+                    foodName: meal.foodName,
+                    waterContent: 1,
+                    preparationTime: meal.preparationTime,
+                    foodPhoto: meal.foodPhoto,
+                    mealType: meal.mealType,
+                    calories: 1,
+                  ),
+                ),
+              );
+            },
+          ),
+          loading: () => const Center(
+              child: CircularProgressIndicator(
+            color: Colors.red,
+          )),
+          error: (err, stack) => Center(child: Text("Xatolik yuz berdi: $err")),
         ),
-        loading: () => const Center(
-            child: CircularProgressIndicator(
-          color: Colors.red,
-        )),
-        error: (err, stack) => Center(child: Text("Xatolik yuz berdi: $err")),
       ),
     );
-    // Column(
-    //   children: [
-    //     DateSelector(),
-    //     Expanded(
-    //       child: SingleChildScrollView(
-    //         child: Padding(
-    //             padding: const EdgeInsets.symmetric(horizontal: 18.0),
-    //             child: Column(
-    //               children: [
-    //                 10.verticalSpace,
-    //                 InkWell(
-    //                   onTap: () {
-    //                     Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                           builder: (context) =>
-    //                               const RecipeDetailScreen()),
-    //                     );
-    //                   },
-    //                   child: const MealCard(
-    //                       'Tushlik',
-    //                       'Avokado va tuxumli buterbrod',
-    //                       'assets/images/meal.png',
-    //                       '20',
-    //                       '1550'),
-    //                 ),
-    //                 24.verticalSpace,
-    //                 InkWell(
-    //                   onTap: () {
-    //                     Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                           builder: (context) => RecipeDetailScreen()),
-    //                     );
-    //                   },
-    //                   child: const MealCard(
-    //                       'Tushlik',
-    //                       'Avokado va tuxumli buterbrod',
-    //                       'assets/images/meal.png',
-    //                       '20',
-    //                       '1550'),
-    //                 ),
-    //                 24.verticalSpace,
-    //                 InkWell(
-    //                   onTap: () {
-    //                     Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                           builder: (context) => RecipeDetailScreen()),
-    //                     );
-    //                   },
-    //                   child: const MealCard(
-    //                       'Tushlik',
-    //                       'Avokado va tuxumli buterbrod',
-    //                       'assets/images/meal.png',
-    //                       '20',
-    //                       '1550'),
-    //                 ),
-    //                 24.verticalSpace,
-    //               ],
-    //             )),
-    //       ),
-    //     ),
-    //   ],
-    // ));
   }
 }

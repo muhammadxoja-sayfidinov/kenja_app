@@ -29,7 +29,8 @@ class ProfileScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final user = users;
           if (users == null) {
-            return Center(child: Text("Foydalanuvchi ma'lumotlari topilmadi."));
+            return const Center(
+                child: Text("Foydalanuvchi ma'lumotlari topilmadi."));
           }
           return Padding(
             padding: EdgeInsets.all(16.w),
@@ -58,7 +59,7 @@ class ProfileScreen extends ConsumerWidget {
                   CircleAvatar(
                     radius: 50.r,
                     backgroundImage: NetworkImage(
-                        user.photo), // Replace with actual image URL
+                        "https://owntrainer.uz//${user.photo}"), // Replace with actual image URL
                   ),
                   12.verticalSpace,
                   Text('${user.firstName} ${user.lastName}',
@@ -204,7 +205,7 @@ class ProfileScreen extends ConsumerWidget {
         debugPrint("Stack trace: $stack");
         return Center(child: Text("Xatolik yuz berdi: $err"));
       },
-      loading: () => Center(
+      loading: () => const Center(
           child: CircularProgressIndicator(
         color: Colors.red,
       )),

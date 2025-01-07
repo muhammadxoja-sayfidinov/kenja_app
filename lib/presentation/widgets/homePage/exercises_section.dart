@@ -5,16 +5,16 @@ import 'package:kenja_app/core/constants/colors.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/styles.dart';
-import '../../screens/Exercises/exercise_screen.dart';
+import '../../../data/models/workout_categories.dart';
+import '../../screens/exercises/exercise_screen.dart';
 
 class ExercisesSection extends StatelessWidget {
-  const ExercisesSection({super.key, required this.categoryName});
+  const ExercisesSection({
+    super.key,
+    required this.category,
+  });
 
-  final bool today = false;
-
-  final bool done = false;
-
-  final String categoryName;
+  final WorkoutCategory category;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +22,6 @@ class ExercisesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        today
-            ? Text(
-                'Bugun bajaramiz 💪🏻',
-                style: CustomTextStyle.style600,
-              )
-            : const SizedBox(),
         16.verticalSpace,
         Container(
             width: double.infinity,
@@ -38,9 +32,9 @@ class ExercisesSection extends StatelessWidget {
             ),
             child: DecoratedBox(
               decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage(
-                      'assets/images/Rectangle 5817.png',
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      category.workoutImage.toString(),
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -51,7 +45,7 @@ class ExercisesSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    done
+                    false
                         ? const SizedBox()
                         : Container(
                             padding: const EdgeInsets.all(5),
@@ -83,21 +77,23 @@ class ExercisesSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          categoryName,
+                          category.categoryName,
                           style:
                               CustomTextStyle.style700.copyWith(color: white),
                         ),
                         16.verticalSpace,
                         MyNextBottomWhite(
-                            color: done ? Colors.transparent : white,
+                            color: false ? Colors.transparent : white,
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const WorkoutScreen()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ExerciseScreen(category: category),
+                                ),
+                              );
                             },
-                            text: done ? 'Bajarildi' : 'Bajarish'),
+                            text: false ? 'Bajarildi' : 'Bajarish'),
                       ],
                     )
                   ],

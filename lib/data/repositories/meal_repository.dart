@@ -3,19 +3,23 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/meal.dart.dart';
+import '../models/meal_model.dart';
 
-class MealRepository {
-  final String baseUrl = "https://owntrainer.uz/api/food/api/meals/";
+class MealsService {
+  static const String baseUrl = 'https://owntrainer.uz/api/food/api/meals/';
 
-  Future<List<Meal>> fetchMeals() async {
+  Future<String> _getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('access_token');
-
-    // Agar access token bo'lmasa, autentifikatsiya qiling
     if (accessToken == null) {
       throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
     }
+    return accessToken;
+  }
+
+  /// API’dan “meals” ma’lumotlarini olib kelish funksiyasi
+  Future<List<Meal>> fetchMeals() async {
+    final accessToken = await _getAccessToken();
 
     final response = await http.get(
       Uri.parse(baseUrl),
@@ -25,12 +29,15 @@ class MealRepository {
         'Content-Type': 'application/json',
       },
     );
-    print(jsonDecode(response.body)["meals"]);
+
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body)["meals"];
-      return data.map((meal) => Meal.fromJson(meal)).toList();
+      final Map<String, dynamic> decodedData = jsonDecode(response.body);
+      final List<dynamic> mealsJson = decodedData['meals'] ?? [];
+      final meals =
+          mealsJson.map((mealJson) => Meal.fromJson(mealJson)).toList();
+      return meals;
     } else {
-      throw Exception("Failed to load meals. Status: ${response.statusCode}");
+      throw Exception('Failed to load meals');
     }
   }
 }

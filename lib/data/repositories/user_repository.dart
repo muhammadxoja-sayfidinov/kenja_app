@@ -16,9 +16,6 @@ class UserRepository {
         headers: _buildHeaders(accessToken),
       );
 
-      print("Response status code: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return User.fromJson(data);
@@ -28,7 +25,6 @@ class UserRepository {
         throw Exception("Xatolik yuz berdi: ${response.statusCode}");
       }
     } catch (e) {
-      print("Xatolik: $e");
       throw Exception("Xatolik yuz berdi: $e");
     }
   }
@@ -46,14 +42,11 @@ class UserRepository {
       );
 
       if (response.statusCode == 200) {
-        print("Foydalanuvchi ma'lumotlari muvaffaqiyatli yangilandi.");
         return true;
       } else {
-        print("Yangilashda xatolik: ${response.body}");
         return false;
       }
     } catch (e) {
-      print("Xatolik yuz berdi: $e");
       return false;
     }
   }
@@ -65,7 +58,6 @@ class UserRepository {
     if (accessToken == null) {
       throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
     }
-    print("Token: $accessToken"); // Debug uchun tokenni chop qilamiz
     return accessToken;
   }
 
