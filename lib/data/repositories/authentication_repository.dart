@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login.dart';
-import '../models/register.dart';
 
 enum AuthStatus { unauthenticated, authenticating, authenticated, error }
 
@@ -198,41 +197,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       return false;
     } catch (e) {
       return false;
-    }
-  }
-
-  Future<void> register(RegisterRequest request) async {
-    final url = Uri.parse('https://owntrainer.uz/api/users/register/');
-    try {
-      state = state.copyWith(status: AuthStatus.authenticating);
-
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(request.toJson()),
-      );
-
-      if (response.statusCode == 201) {
-        state = state.copyWith(
-          status: AuthStatus.authenticated,
-          errorMessage: null,
-        );
-      } else {
-        final errorData = jsonDecode(response.body);
-        state = state.copyWith(
-          status: AuthStatus.error,
-          errorMessage:
-              errorData['detail'] ?? 'Roʻyxatdan oʻtishda xatolik yuz berdi',
-        );
-      }
-    } catch (e) {
-      state = state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: 'Serverga ulanishda xatolik: $e',
-      );
     }
   }
 

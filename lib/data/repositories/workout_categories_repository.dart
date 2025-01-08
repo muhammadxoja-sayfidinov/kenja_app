@@ -41,7 +41,7 @@ class WorkoutService {
       final categories = categoriesJson
           .map((catJson) => WorkoutCategory.fromJson(catJson))
           .toList();
-      return categories as List<WorkoutCategory>;
+      return categories;
     } else {
       throw Exception('Kategoriyalarni yuklab bo‘lmadi');
     }
@@ -66,7 +66,7 @@ class WorkoutService {
       final List<dynamic> exercisesJson = decoded['exercises'] ?? [];
       final exercises =
           exercisesJson.map((exJson) => Exercise.fromJson(exJson)).toList();
-      return exercises as List<Exercise>;
+      return exercises;
     } else {
       throw Exception('Mashqlarni yuklab bo‘lmadi');
     }

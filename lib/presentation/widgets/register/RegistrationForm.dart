@@ -1,79 +1,62 @@
+// presentation/screens/register/registration_form.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/presentation/screens/register/register_verfication_code_page.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom.dart';
+import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../data/models/register.dart';
-import '../../../data/providers/api_controllers.dart';
-import '../custom_text_form_field.dart';
+import '../../../data/providers/register_provider.dart';
+import '../../screens/register/register_verfication_code_page.dart';
+import '../../widgets/custom_text_form_field.dart';
 
-class RegistrationForm extends ConsumerWidget {
-  RegistrationForm({super.key});
-
-  final _formKey = GlobalKey<FormState>();
+class RegistrationForm extends ConsumerStatefulWidget {
+  const RegistrationForm({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userName = ref.watch(usernameProvider);
-    final lastName = ref.watch(lastNameControllerProvider);
-    final phoneOrEmail = ref.watch(phoneOrEmailControllerProvider);
-    final password = ref.watch(passwordControllerProvider);
-    final confirmPassword = ref.watch(confirmPasswordControllerProvider);
-    final isTermsAccepted = ref.watch(termsAcceptedProvider);
+  ConsumerState<RegistrationForm> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends ConsumerState<RegistrationForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _firstNameCtrl = TextEditingController();
+  final _lastNameCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController(); // email yoki phone
+  final _passwordCtrl = TextEditingController();
+  final _confirmPasswordCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
+    _phoneCtrl.dispose();
+    _passwordCtrl.dispose();
+    _confirmPasswordCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // RegistrationState (status, message, userId)
+    final registrationState = ref.watch(registrationNotifierProvider);
+    // Qurilma mavzusi (dark/light)
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    void _submitForm() async {
-      if (_formKey.currentState!.validate()) {
-        if (!isTermsAccepted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Shartlarga rozilik bildirish kerak!')),
-          );
-          return;
-        }
-
-        final registerRequest = RegisterRequest(
-          firstName: userName.text,
-          lastName: lastName.text,
-          emailOrPhone: phoneOrEmail.text,
-          password: password.text,
-          gender: "Male",
-          // To‘g‘ri qiymatni sozlash (UIda gender tanlash qo‘shilishi kerak)
-          country: "Uzbekistan",
-          // UIda mamlakat tanlash qo‘shilishi mumkin
-          age: 25,
-          // Yoshingizni qo‘lda kiritish o‘rniga UI qo‘shilishi kerak
-          height: 180,
-          // UIga kiritish maydonini qo‘shing
-          weight: 75,
-          // UIga kiritish maydonini qo‘shing
-          level: "Beginner",
-          // UIda daraja tanlash uchun dropdown qo‘shing
-          goal: "Vazn yo'qotish", // UI orqali maqsad tanlash
-        );
-
-        try {
-          await ref.read(authProvider.notifier).register(registerRequest);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const VerificationRegisterCodePage()),
-          );
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Xatolik yuz berdi: $e')),
-          );
-        }
-      }
-    }
+    // Agar ro‘yxatdan o‘tish boshlab yuborilgan bo‘lsa (loading)
+    final bool isSubmitting =
+        registrationState.status == RegistrationStatus.submitting;
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
+            // 1) FIRST NAME
             CustomTextFormField(
-              controller: userName,
+              controller: _firstNameCtrl,
               labelText: 'Ismingiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -83,8 +66,10 @@ class RegistrationForm extends ConsumerWidget {
               },
             ),
             SizedBox(height: 16.h),
+
+            // 2) LAST NAME
             CustomTextFormField(
-              controller: lastName,
+              controller: _lastNameCtrl,
               labelText: 'Familiyangiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -94,19 +79,24 @@ class RegistrationForm extends ConsumerWidget {
               },
             ),
             SizedBox(height: 16.h),
+
+            // 3) EMAIL or PHONE
             CustomTextFormField(
-              controller: phoneOrEmail,
+              controller: _phoneCtrl,
               labelText: 'Email’ingiz yoki raqamingiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Iltimos, emailingiz yoki raqamingizni kiriting';
                 }
+                // Agar email tekshirish yoki phone formatini tekshirish kerak bo‘lsa, shu yerda qo‘shing.
                 return null;
               },
             ),
             SizedBox(height: 16.h),
+
+            // 4) PASSWORD
             CustomTextFormField(
-              controller: password,
+              controller: _passwordCtrl,
               labelText: 'Parol o\'ylab toping',
               obscureText: true,
               suffixIcon: const Icon(Icons.visibility_off),
@@ -121,8 +111,10 @@ class RegistrationForm extends ConsumerWidget {
               },
             ),
             SizedBox(height: 16.h),
+
+            // 5) CONFIRM PASSWORD
             CustomTextFormField(
-              controller: confirmPassword,
+              controller: _confirmPasswordCtrl,
               labelText: 'Parolni takrorlang',
               obscureText: true,
               suffixIcon: const Icon(Icons.visibility_off),
@@ -130,37 +122,32 @@ class RegistrationForm extends ConsumerWidget {
                 if (value == null || value.isEmpty) {
                   return 'Iltimos, parolni takrorlang';
                 }
-                if (value != password.text) {
-                  return 'Parol bir biri bilan mos emas!';
+                if (value != _passwordCtrl.text) {
+                  return 'Parol mos emas!';
                 }
                 return null;
               },
             ),
             SizedBox(height: 16.h),
+
+            // 6) SHARTLARGA ROZILIK (checkbox). Hozircha static
             InkWell(
               onTap: () {
-                ref.read(termsAcceptedProvider.notifier).state =
-                    !isTermsAccepted;
+                // TODO: Agar sizda "termsAcceptedProvider" bo'lsa, toggling
+                // ref.read(termsAcceptedProvider.notifier).state = !ref.read(termsAcceptedProvider);
               },
               child: Row(
                 children: [
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final isAccepted = ref.watch(termsAcceptedProvider);
-                      return Icon(
-                        isAccepted
-                            ? Icons.check_box
-                            : Icons.check_box_outline_blank,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                      );
-                    },
+                  // Check Box
+                  // final isAccepted = ref.watch(termsAcceptedProvider);
+                  Icon(
+                    true ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
-                  12.horizontalSpace,
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Text(
-                      'Dasturdan foydalanish shartlariga rozilik bildiraman.',
+                      'Dasturdan foydalanish shartlariga roziman.',
                       style: TextStyle(fontSize: 14.sp),
                     ),
                   ),
@@ -168,15 +155,146 @@ class RegistrationForm extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 16.h),
+
+            // 7) REGISTRATION BUTTON
+            // Agar isSubmitting bo'lsa, tugma disable yoki progress bo'lishi mumkin
             isDark
-                ? ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text('Registratsiya qilish'),
+                ? MyNextBottom(
+                    onTap: isSubmitting
+                        ? () {}
+                        : () async {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+
+                            final request = RegisterRequest(
+                              firstName: _firstNameCtrl.text.trim(),
+                              lastName: _lastNameCtrl.text.trim(),
+                              emailOrPhone: _phoneCtrl.text.trim(),
+                              password: _passwordCtrl.text,
+                            );
+
+                            await ref
+                                .read(registrationNotifierProvider.notifier)
+                                .registerInitial(request);
+
+                            final currentState =
+                                ref.read(registrationNotifierProvider);
+
+                            print(
+                                'Current State Status: ${currentState.status}');
+                            print(
+                                'Is Success: ${currentState.status == RegistrationStatus.success}');
+                            print(
+                                'Current State Status Type: ${currentState.status.runtimeType}');
+                            print(
+                                'RegistrationStatus.success Type: ${RegistrationStatus.success.runtimeType}');
+
+                            if (currentState.status ==
+                                    RegistrationStatus.success &&
+                                currentState.userId != null &&
+                                currentState.userId! > 0) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const VerificationRegisterCodePage()));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text(currentState.message ?? 'Success!'),
+                                ),
+                              );
+                            } else if (currentState.status ==
+                                RegistrationStatus.error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(currentState.message ??
+                                      'Xatolik yuz berdi'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                    text: isSubmitting
+                        ? 'Iltimos, kuting...' // or show a small loader
+                        : 'Registratsiya qilish',
                   )
-                : ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text('Registratsiya qilish'),
+                : MyNextBottomWhite(
+                    onTap: isSubmitting
+                        ? () {}
+                        : () async {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+
+                            final request = RegisterRequest(
+                              firstName: _firstNameCtrl.text.trim(),
+                              lastName: _lastNameCtrl.text.trim(),
+                              emailOrPhone: _phoneCtrl.text.trim(),
+                              password: _passwordCtrl.text,
+                            );
+
+                            await ref
+                                .read(registrationNotifierProvider.notifier)
+                                .registerInitial(request);
+
+                            final currentState =
+                                ref.read(registrationNotifierProvider);
+
+                            if (currentState.status ==
+                                    RegistrationStatus.success &&
+                                currentState.userId != null &&
+                                currentState.userId! > 0) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const VerificationRegisterCodePage()));
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text(currentState.message ?? 'Success!'),
+                                ),
+                              );
+                            } else if (currentState.status ==
+                                RegistrationStatus.error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(currentState.message ??
+                                      'Xatolik yuz berdi'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                    text: isSubmitting
+                        ? 'Iltimos, kuting...'
+                        : 'Registratsiya qilish',
                   ),
+
+            // Agar xohlasangiz, pastda status bo‘yicha xabar chiqarish ham mumkin
+            if (registrationState.status == RegistrationStatus.error &&
+                registrationState.message != null)
+              Padding(
+                padding: EdgeInsets.only(top: 8.h),
+                child: Text(
+                  registrationState.message!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            if (registrationState.status == RegistrationStatus.success &&
+                registrationState.message != null &&
+                (registrationState.userId == null ||
+                    registrationState.userId! <= 0))
+              Padding(
+                padding: EdgeInsets.only(top: 8.h),
+                child: Text(
+                  registrationState.message!,
+                  style: const TextStyle(color: Colors.green),
+                ),
+              ),
           ],
         ),
       ),

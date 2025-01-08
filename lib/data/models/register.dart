@@ -1,28 +1,16 @@
+// models/register.dart
+
 class RegisterRequest {
   final String firstName;
   final String lastName;
   final String emailOrPhone;
   final String password;
-  final String gender;
-  final String country;
-  final int age;
-  final int height;
-  final int weight;
-  final String level;
-  final String goal;
 
   RegisterRequest({
     required this.firstName,
     required this.lastName,
     required this.emailOrPhone,
     required this.password,
-    required this.gender,
-    required this.country,
-    required this.age,
-    required this.height,
-    required this.weight,
-    required this.level,
-    required this.goal,
   });
 
   Map<String, dynamic> toJson() {
@@ -31,13 +19,41 @@ class RegisterRequest {
       'last_name': lastName,
       'email_or_phone': emailOrPhone,
       'password': password,
-      'gender': gender,
-      'country': country,
-      'age': age,
-      'height': height,
-      'weight': weight,
-      'level': level,
-      'goal': goal,
     };
+  }
+}
+
+class RegisterResponse {
+  final int userId;
+  final String message;
+
+  RegisterResponse({
+    required this.userId,
+    required this.message,
+  });
+
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) {
+    // Agar server 'user_id' yoki 'id' bilan qaytarsa, uni olish
+    return RegisterResponse(
+      userId: json['user_id'] ?? json['id'] ?? 0,
+      message: json['message'] ?? '',
+    );
+  }
+
+  @override
+  String toString() {
+    return 'RegisterResponse(userId: $userId, message: $message)';
+  }
+}
+
+class VerifyCodeResponse {
+  final String message;
+
+  VerifyCodeResponse({required this.message});
+
+  factory VerifyCodeResponse.fromJson(Map<String, dynamic> json) {
+    return VerifyCodeResponse(
+      message: json['message'] ?? '',
+    );
   }
 }

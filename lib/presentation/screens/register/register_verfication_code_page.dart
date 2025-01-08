@@ -1,55 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/screens/register/user_info_screen.dart';
-import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/styles.dart';
+import '../../../data/providers/register_provider.dart';
+import '../../widgets/next_bottom.dart';
+import 'user_info_screen.dart';
 
-class VerificationRegisterCodePage extends StatefulWidget {
-  const VerificationRegisterCodePage({super.key});
+class VerificationRegisterCodePage extends ConsumerStatefulWidget {
+  const VerificationRegisterCodePage({Key? key}) : super(key: key);
 
   @override
-  _VerificationRegisterCodePageState createState() =>
+  ConsumerState<VerificationRegisterCodePage> createState() =>
       _VerificationRegisterCodePageState();
 }
 
 class _VerificationRegisterCodePageState
-    extends State<VerificationRegisterCodePage> {
+    extends ConsumerState<VerificationRegisterCodePage> {
   final _formKey = GlobalKey<FormState>();
+
+  // Har bir xonaga alohida controller va focusNode
   final List<TextEditingController> _controllers =
-      List.generate(5, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(5, (_) => FocusNode());
+      List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final registrationState = ref.watch(registrationNotifierProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final bool isVerifying =
+        registrationState.status == RegistrationStatus.codeVerifying;
+
     return Scaffold(
       body: Stack(
         children: [
+          // Yuqori background rasm
           Image.asset(
             'assets/images/BackgroundImage.png',
             width: double.infinity,
             height: 466.h,
             fit: BoxFit.cover,
           ),
+
+          // Yuqorida Logo
           Align(
-              heightFactor: 4.9.h,
-              // alignment: Alignment.topCenter,
-              child: Image.asset(
-                'assets/logo/logo_text.png',
-                width: 201.w,
-              )),
+            heightFactor: 4.9.h,
+            child: Image.asset(
+              'assets/logo/logo_text.png',
+              width: 201.w,
+            ),
+          ),
+
+          // Quyidagi “white/dark container” qism
           Align(
-            alignment: const Alignment(0, 1),
+            alignment: Alignment(0, 1), // Pastda joylashgan
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: Container(
                 alignment: Alignment.bottomCenter,
                 padding: EdgeInsets.all(24.w),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? mainDarkColor
-                      : Colors.white,
+                  color: isDark ? mainDarkColor : Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(24.r),
                     topRight: Radius.circular(24.r),
@@ -58,6 +82,7 @@ class _VerificationRegisterCodePageState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Sarlavha
                     Text(
                       'Tasdiqlash kodini kiriting',
                       style: TextStyle(
@@ -66,34 +91,82 @@ class _VerificationRegisterCodePageState
                       ),
                     ),
                     SizedBox(height: 8.h),
+
+                    // Qaysi raqamga yuborilgani
                     Text(
-                        'Biz +99890 *** 6263 raqamiga tasdiqlash kodini yubordik',
-                        style: CustomTextStyle.style500.copyWith(color: grey)),
+                      'Biz sizga tasdiqlash kodini yubordik',
+                      style: CustomTextStyle.style500.copyWith(color: grey),
+                    ),
                     SizedBox(height: 16.h),
+
+                    // KOD kirish form
                     Form(
                       key: _formKey,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: List.generate(5, (index) {
+                        children: List.generate(4, (index) {
                           return _buildCodeField(
-                              _controllers[index], _focusNodes[index], index);
+                            _controllers[index],
+                            _focusNodes[index],
+                            index,
+                          );
                         }),
                       ),
                     ),
                     SizedBox(height: 32.h),
+
+                    // "Davom etish" tugmasi
                     MyNextBottom(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserInfoScreen()),
-                          );
-                        }
-                      },
-                      text: 'Davom etish',
+                      onTap: isVerifying
+                          ? () {}
+                          : () async {
+                              if (!_formKey.currentState!.validate()) {
+                                return; // Form tekshiruvi
+                              }
+
+                              // Tasdiqlash kodini yig'ish
+                              final code =
+                                  _controllers.map((c) => c.text).join();
+
+                              // Tasdiqlashni chaqirish
+                              await ref
+                                  .read(registrationNotifierProvider.notifier)
+                                  .verifyCode(code);
+
+                              final currentState =
+                                  ref.read(registrationNotifierProvider);
+
+                              if (currentState.status ==
+                                  RegistrationStatus.success) {
+                                // Muvaffaqiyatli tasdiq
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserInfoScreen(),
+                                  ),
+                                );
+                              } else if (currentState.status ==
+                                  RegistrationStatus.error) {
+                                final errorMsg =
+                                    currentState.message ?? 'Xatolik yuz berdi';
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(errorMsg)),
+                                );
+                              }
+                            },
+                      text: isVerifying
+                          ? 'Kodni tekshiryapmiz...'
+                          : 'Davom etish',
                     ),
-                    24.verticalSpace,
+                    SizedBox(height: 24.h),
+
+                    // Agar xohlasangiz, xatolik xabarini shu yerda ko'rsatsangiz ham bo'ladi
+                    if (registrationState.status == RegistrationStatus.error &&
+                        registrationState.message != null)
+                      Text(
+                        registrationState.message!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                   ],
                 ),
               ),
@@ -104,76 +177,45 @@ class _VerificationRegisterCodePageState
     );
   }
 
+  /// Har bir textField xonasi
   Widget _buildCodeField(
       TextEditingController controller, FocusNode focusNode, int index) {
     return Container(
-      alignment: Alignment.center,
       width: 48.w,
       height: 48.w,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
         style: CustomTextStyle.style700,
         textAlign: TextAlign.center,
-        keyboardType: TextInputType.text,
-        // Use text instead of number for 'w'
+        keyboardType: TextInputType.number,
         maxLength: 1,
         decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
           counterText: "",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: const BorderSide(
               color: Colors.grey,
-              width: 2.0, // Set consistent border width
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-              width: 2.0, // Set consistent border width
+              width: 2.0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: const BorderSide(
               color: Colors.blue,
-              width: 2.0, // Set consistent border width
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2.0, // Ensure the same width as focusedBorder
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2.0, // Ensure the same width as focusedBorder
+              width: 2.0,
             ),
           ),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return ''; // Return null instead of a string to avoid error text
+            return '';
           }
           return null;
         },
         onChanged: (value) {
-          if (value.isNotEmpty) {
-            if (index < _focusNodes.length - 1) {
-              _focusNodes[index + 1].requestFocus();
-            } else {
-              _focusNodes[index].unfocus();
-            }
+          if (value.isNotEmpty && index < _focusNodes.length - 1) {
+            _focusNodes[index + 1].requestFocus();
           } else if (value.isEmpty && index > 0) {
             _focusNodes[index - 1].requestFocus();
           }
