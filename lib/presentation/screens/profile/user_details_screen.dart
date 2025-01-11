@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/colors.dart';
-import 'package:kenja_app/data/models/User.dart';
+import 'package:kenja_app/data/models/user_profile.dart';
 import 'package:kenja_app/presentation/widgets/custom_text_form_field.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
-import '../../../data/providers/profile_provider.dart';
+import '../../../data/providers/providers.dart';
 import '../../widgets/custom_toggle_buttons.dart';
 import '../../widgets/edit_bottom_sheet.dart';
 
 class UserDetailsScreen extends ConsumerWidget {
-  User user;
- UserDetailsScreen({super.key , required this.user});
+  UserProfile user;
 
-
+  UserDetailsScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +46,7 @@ class UserDetailsScreen extends ConsumerWidget {
             context: context,
             title: 'Yoshingiz',
             subtitle: '${user.age}',
-            onTap: () => _showAgeBottomSheet(context,user, ref),
+            onTap: () => _showAgeBottomSheet(context, user, ref),
           ),
           Divider(
             height: 0,
@@ -57,7 +56,7 @@ class UserDetailsScreen extends ConsumerWidget {
             context: context,
             title: 'Bo\'yingiz',
             subtitle: '${user.height} sm',
-            onTap: () => _showHeightBottomSheet(context,user, ref),
+            onTap: () => _showHeightBottomSheet(context, user, ref),
           ),
           Divider(
             height: 0,
@@ -67,7 +66,7 @@ class UserDetailsScreen extends ConsumerWidget {
             context: context,
             title: 'Og\'irligingiz',
             subtitle: '${user.weight} kg',
-            onTap: () => _showWeightBottomSheet(context,user, ref),
+            onTap: () => _showWeightBottomSheet(context, user, ref),
           ),
           Divider(
             height: 0,
@@ -77,7 +76,7 @@ class UserDetailsScreen extends ConsumerWidget {
             context: context,
             title: 'Maqsadingiz',
             subtitle: user.goal,
-            onTap: () => _showGoalBottomSheet(context,user, ref),
+            onTap: () => _showGoalBottomSheet(context, user, ref),
           ),
           Divider(
             height: 0,
@@ -87,7 +86,7 @@ class UserDetailsScreen extends ConsumerWidget {
             context: context,
             title: 'Darajangiz',
             subtitle: user.level,
-            onTap: () => _showLevelBottomSheet(context,user, ref),
+            onTap: () => _showLevelBottomSheet(context, user, ref),
           ),
         ],
       ),
@@ -140,7 +139,7 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildGenderTile(BuildContext context,User user, WidgetRef ref,
+  Widget _buildGenderTile(BuildContext context, UserProfile user, WidgetRef ref,
       {required String title, required String icon, required String value}) {
     return ListTile(
       leading: Container(
@@ -177,9 +176,10 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  void _showAgeBottomSheet(BuildContext context,User user, WidgetRef ref) {
-    TextEditingController controller = TextEditingController(
-        text: user.age.toString());
+  void _showAgeBottomSheet(
+      BuildContext context, UserProfile user, WidgetRef ref) {
+    TextEditingController controller =
+        TextEditingController(text: user.age.toString());
     showEditBottomSheet(
       context: context,
       title: 'Yoshingiz',
@@ -192,8 +192,7 @@ class UserDetailsScreen extends ConsumerWidget {
         SizedBox(height: 16.h),
         MyNextBottom(
           onTap: () {
-            int age = int.tryParse(controller.text) ??
-                user.age;
+            int age = int.tryParse(controller.text) ?? user.age;
             Navigator.pop(context);
           },
           text: 'Saqlash',
@@ -202,9 +201,10 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  void _showHeightBottomSheet(BuildContext context,User user , WidgetRef ref) {
-    TextEditingController controller = TextEditingController(
-        text: user.height.toString());
+  void _showHeightBottomSheet(
+      BuildContext context, UserProfile user, WidgetRef ref) {
+    TextEditingController controller =
+        TextEditingController(text: user.height.toString());
     showEditBottomSheet(
       context: context,
       title: 'Bo’yingiz',
@@ -217,8 +217,7 @@ class UserDetailsScreen extends ConsumerWidget {
         SizedBox(height: 16.h),
         MyNextBottom(
           onTap: () {
-            int height = int.tryParse(controller.text) ??
-                user.height;
+            // int height = int.tryParse(controller.text) ?? user.height;
 
             Navigator.pop(context);
           },
@@ -228,9 +227,10 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  void _showWeightBottomSheet(BuildContext context,User user , WidgetRef ref) {
-    TextEditingController controller = TextEditingController(
-        text:user.weight.toString());
+  void _showWeightBottomSheet(
+      BuildContext context, UserProfile user, WidgetRef ref) {
+    TextEditingController controller =
+        TextEditingController(text: user.weight.toString());
     showEditBottomSheet(
       context: context,
       title: 'Og’irligingiz',
@@ -243,8 +243,7 @@ class UserDetailsScreen extends ConsumerWidget {
         SizedBox(height: 16.h),
         MyNextBottom(
           onTap: () {
-            int weight = int.tryParse(controller.text) ??
-               user.weight;
+            // int weight = int.tryParse(controller.text) ?? user.weight;
 
             Navigator.pop(context);
           },
@@ -254,9 +253,10 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  void _showGoalBottomSheet(BuildContext context,User user , WidgetRef ref) {
-    TextEditingController controller = TextEditingController(
-        text: user.goal.toString());
+  void _showGoalBottomSheet(
+      BuildContext context, UserProfile user, WidgetRef ref) {
+    TextEditingController controller =
+        TextEditingController(text: user.goal.toString());
     showEditBottomSheet(
       context: context,
       title: 'Maqsadingiz',
@@ -275,9 +275,10 @@ class UserDetailsScreen extends ConsumerWidget {
     );
   }
 
-  void _showLevelBottomSheet(BuildContext context,User user, WidgetRef ref) {
-    TextEditingController controller = TextEditingController(
-        text: user.level.toString());
+  void _showLevelBottomSheet(
+      BuildContext context, UserProfile user, WidgetRef ref) {
+    TextEditingController controller =
+        TextEditingController(text: user.level.toString());
     showEditBottomSheet(
       context: context,
       title: 'Yoshingiz',

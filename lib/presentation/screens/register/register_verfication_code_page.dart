@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kenja_app/presentation/screens/register/user_info_screen.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
-import '../../../data/providers/register_provider.dart';
+import '../../../data/repositories/authentication_repository.dart';
 import '../../widgets/next_bottom.dart';
-import 'user_info_screen.dart';
 
 class VerificationRegisterCodePage extends ConsumerStatefulWidget {
   const VerificationRegisterCodePage({Key? key}) : super(key: key);
@@ -21,13 +21,13 @@ class _VerificationRegisterCodePageState
   final _formKey = GlobalKey<FormState>();
 
   // Har bir xonaga alohida controller va focusNode
-  final List<TextEditingController> _controllers =
+  final List<TextEditingController> codeController =
       List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
+    for (var controller in codeController) {
       controller.dispose();
     }
     for (var focusNode in _focusNodes) {
@@ -38,11 +38,9 @@ class _VerificationRegisterCodePageState
 
   @override
   Widget build(BuildContext context) {
-    final registrationState = ref.watch(registrationNotifierProvider);
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final bool isVerifying =
-        registrationState.status == RegistrationStatus.codeVerifying;
 
     return Scaffold(
       body: Stack(
@@ -54,7 +52,6 @@ class _VerificationRegisterCodePageState
             height: 466.h,
             fit: BoxFit.cover,
           ),
-
           // Yuqorida Logo
           Align(
             heightFactor: 4.9.h,
@@ -63,7 +60,6 @@ class _VerificationRegisterCodePageState
               width: 201.w,
             ),
           ),
-
           // Quyidagi “white/dark container” qism
           Align(
             alignment: Alignment(0, 1), // Pastda joylashgan
@@ -106,7 +102,7 @@ class _VerificationRegisterCodePageState
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: List.generate(4, (index) {
                           return _buildCodeField(
-                            _controllers[index],
+                            codeController[index],
                             _focusNodes[index],
                             index,
                           );
@@ -116,56 +112,56 @@ class _VerificationRegisterCodePageState
                     SizedBox(height: 32.h),
 
                     // "Davom etish" tugmasi
-                    MyNextBottom(
-                      onTap: isVerifying
-                          ? () {}
-                          : () async {
-                              if (!_formKey.currentState!.validate()) {
-                                return; // Form tekshiruvi
-                              }
 
-                              // Tasdiqlash kodini yig'ish
+                    authState.status == AuthStatus.verifying
+                        ? const CircularProgressIndicator(
+                            color: Colors.red,
+                          )
+                        : MyNextBottom(
+                            text: 'Verify',
+                            onTap: () async {
                               final code =
-                                  _controllers.map((c) => c.text).join();
-
-                              // Tasdiqlashni chaqirish
-                              await ref
-                                  .read(registrationNotifierProvider.notifier)
-                                  .verifyCode(code);
-
-                              final currentState =
-                                  ref.read(registrationNotifierProvider);
-
-                              if (currentState.status ==
-                                  RegistrationStatus.success) {
-                                // Muvaffaqiyatli tasdiq
-                                Navigator.push(
+                                  codeController.map((c) => c.text).join();
+                              if (code.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Please enter the verification code.')),
+                                );
+                                return;
+                              }
+                              await authNotifier
+                                  .verifyCode(code)
+                                  .whenComplete(() {});
+                              if (ref.read(authProvider).status ==
+                                  AuthStatus.authenticated) {
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(),
-                                  ),
+                                      builder: (context) => UserInfoScreen()),
+                                  (route) => false,
                                 );
-                              } else if (currentState.status ==
-                                  RegistrationStatus.error) {
-                                final errorMsg =
-                                    currentState.message ?? 'Xatolik yuz berdi';
+                              } else if (ref.read(authProvider).errorMessage !=
+                                  null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(errorMsg)),
+                                  SnackBar(
+                                      content: Text(
+                                          'Error: ${ref.read(authProvider).errorMessage}')),
                                 );
                               }
                             },
-                      text: isVerifying
-                          ? 'Kodni tekshiryapmiz...'
-                          : 'Davom etish',
-                    ),
-                    SizedBox(height: 24.h),
-
-                    // Agar xohlasangiz, xatolik xabarini shu yerda ko'rsatsangiz ham bo'ladi
-                    if (registrationState.status == RegistrationStatus.error &&
-                        registrationState.message != null)
+                          ),
+                    const SizedBox(height: 20),
+                    if (authState.errorMessage != null)
                       Text(
-                        registrationState.message!,
+                        authState.errorMessage!,
                         style: const TextStyle(color: Colors.red),
+                      ),
+                    if (authState.loginResponse != null &&
+                        authState.loginResponse!.message != 'Already logged in')
+                      Text(
+                        authState.loginResponse!.message!,
+                        style: TextStyle(color: Colors.green),
                       ),
                   ],
                 ),

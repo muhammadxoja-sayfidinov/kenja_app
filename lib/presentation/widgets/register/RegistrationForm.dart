@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
-import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
-import '../../../data/models/register.dart';
-import '../../../data/providers/register_provider.dart';
+import '../../../core/constants/colors.dart';
+import '../../../data/models/register_initial_model.dart';
+import '../../../data/repositories/authentication_repository.dart';
 import '../../screens/register/register_verfication_code_page.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -21,32 +21,27 @@ class RegistrationForm extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final _firstNameCtrl = TextEditingController();
-  final _lastNameCtrl = TextEditingController();
-  final _phoneCtrl = TextEditingController(); // email yoki phone
-  final _passwordCtrl = TextEditingController();
-  final _confirmPasswordCtrl = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailOrPhoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
-  void dispose() {
-    _firstNameCtrl.dispose();
-    _lastNameCtrl.dispose();
-    _phoneCtrl.dispose();
-    _passwordCtrl.dispose();
-    _confirmPasswordCtrl.dispose();
-    super.dispose();
-  }
+  // void dispose() {
+  //   _firstNameCtrl.dispose();
+  //   _lastNameCtrl.dispose();
+  //   _phoneCtrl.dispose();
+  //   _passwordCtrl.dispose();
+  //   _confirmPasswordCtrl.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // RegistrationState (status, message, userId)
-    final registrationState = ref.watch(registrationNotifierProvider);
-    // Qurilma mavzusi (dark/light)
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final authNotifier = ref.read(authProvider.notifier);
 
-    // Agar ro‘yxatdan o‘tish boshlab yuborilgan bo‘lsa (loading)
-    final bool isSubmitting =
-        registrationState.status == RegistrationStatus.submitting;
+    final authState = ref.watch(authProvider);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -56,7 +51,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
           children: [
             // 1) FIRST NAME
             CustomTextFormField(
-              controller: _firstNameCtrl,
+              controller: firstNameController,
               labelText: 'Ismingiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -69,7 +64,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
 
             // 2) LAST NAME
             CustomTextFormField(
-              controller: _lastNameCtrl,
+              controller: lastNameController,
               labelText: 'Familiyangiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -82,7 +77,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
 
             // 3) EMAIL or PHONE
             CustomTextFormField(
-              controller: _phoneCtrl,
+              controller: emailOrPhoneController,
               labelText: 'Email’ingiz yoki raqamingiz',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -96,7 +91,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
 
             // 4) PASSWORD
             CustomTextFormField(
-              controller: _passwordCtrl,
+              controller: passwordController,
               labelText: 'Parol o\'ylab toping',
               obscureText: true,
               suffixIcon: const Icon(Icons.visibility_off),
@@ -114,7 +109,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
 
             // 5) CONFIRM PASSWORD
             CustomTextFormField(
-              controller: _confirmPasswordCtrl,
+              // controller: passwordController,
               labelText: 'Parolni takrorlang',
               obscureText: true,
               suffixIcon: const Icon(Icons.visibility_off),
@@ -122,7 +117,7 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
                 if (value == null || value.isEmpty) {
                   return 'Iltimos, parolni takrorlang';
                 }
-                if (value != _passwordCtrl.text) {
+                if (value != passwordController.text) {
                   return 'Parol mos emas!';
                 }
                 return null;
@@ -158,142 +153,62 @@ class _RegisterScreenState extends ConsumerState<RegistrationForm> {
 
             // 7) REGISTRATION BUTTON
             // Agar isSubmitting bo'lsa, tugma disable yoki progress bo'lishi mumkin
-            isDark
-                ? MyNextBottom(
-                    onTap: isSubmitting
-                        ? () {}
-                        : () async {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-
-                            final request = RegisterRequest(
-                              firstName: _firstNameCtrl.text.trim(),
-                              lastName: _lastNameCtrl.text.trim(),
-                              emailOrPhone: _phoneCtrl.text.trim(),
-                              password: _passwordCtrl.text,
-                            );
-
-                            await ref
-                                .read(registrationNotifierProvider.notifier)
-                                .registerInitial(request);
-
-                            final currentState =
-                                ref.read(registrationNotifierProvider);
-
-                            print(
-                                'Current State Status: ${currentState.status}');
-                            print(
-                                'Is Success: ${currentState.status == RegistrationStatus.success}');
-                            print(
-                                'Current State Status Type: ${currentState.status.runtimeType}');
-                            print(
-                                'RegistrationStatus.success Type: ${RegistrationStatus.success.runtimeType}');
-
-                            if (currentState.status ==
-                                    RegistrationStatus.success &&
-                                currentState.userId != null &&
-                                currentState.userId! > 0) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const VerificationRegisterCodePage()));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text(currentState.message ?? 'Success!'),
-                                ),
-                              );
-                            } else if (currentState.status ==
-                                RegistrationStatus.error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(currentState.message ??
-                                      'Xatolik yuz berdi'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          },
-                    text: isSubmitting
-                        ? 'Iltimos, kuting...' // or show a small loader
-                        : 'Registratsiya qilish',
+            authState.status == AuthStatus.authenticating
+                ? const CircularProgressIndicator(
+                    color: red,
                   )
-                : MyNextBottomWhite(
-                    onTap: isSubmitting
-                        ? () {}
-                        : () async {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-
-                            final request = RegisterRequest(
-                              firstName: _firstNameCtrl.text.trim(),
-                              lastName: _lastNameCtrl.text.trim(),
-                              emailOrPhone: _phoneCtrl.text.trim(),
-                              password: _passwordCtrl.text,
-                            );
-
-                            await ref
-                                .read(registrationNotifierProvider.notifier)
-                                .registerInitial(request);
-
-                            final currentState =
-                                ref.read(registrationNotifierProvider);
-
-                            if (currentState.status ==
-                                    RegistrationStatus.success &&
-                                currentState.userId != null &&
-                                currentState.userId! > 0) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const VerificationRegisterCodePage()));
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text(currentState.message ?? 'Success!'),
-                                ),
-                              );
-                            } else if (currentState.status ==
-                                RegistrationStatus.error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(currentState.message ??
-                                      'Xatolik yuz berdi'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          },
-                    text: isSubmitting
-                        ? 'Iltimos, kuting...'
+                : MyNextBottom(
+                    text: authState.errorMessage != null
+                        ? authState.errorMessage!
                         : 'Registratsiya qilish',
-                  ),
+                    onTap: () async {
+                      final firstName = firstNameController.text.trim();
+                      final lastName = lastNameController.text.trim();
+                      final emailOrPhone = emailOrPhoneController.text.trim();
+                      final password = passwordController.text.trim();
 
-            // Agar xohlasangiz, pastda status bo‘yicha xabar chiqarish ham mumkin
-            if (registrationState.status == RegistrationStatus.error &&
-                registrationState.message != null)
-              Padding(
-                padding: EdgeInsets.only(top: 8.h),
-                child: Text(
-                  registrationState.message!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            if (registrationState.status == RegistrationStatus.success &&
-                registrationState.message != null &&
-                (registrationState.userId == null ||
-                    registrationState.userId! <= 0))
-              Padding(
-                padding: EdgeInsets.only(top: 8.h),
-                child: Text(
-                  registrationState.message!,
-                  style: const TextStyle(color: Colors.green),
-                ),
+                      if (firstName.isEmpty ||
+                          lastName.isEmpty ||
+                          emailOrPhone.isEmpty ||
+                          password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Please fill all fields.')),
+                        );
+                        return;
+                      }
+
+                      final model = RegisterInitialModel(
+                        firstName: firstName,
+                        lastName: lastName,
+                        emailOrPhone: emailOrPhone,
+                        password: password,
+                      );
+
+                      await authNotifier.registerInitial(model);
+
+                      if (ref.read(authProvider).status ==
+                          AuthStatus.unauthenticated) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const VerificationRegisterCodePage()),
+                        );
+                      } else if (ref.read(authProvider).errorMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Error: ${ref.read(authProvider).errorMessage}')),
+                        );
+                      }
+                    },
+                  ),
+            const SizedBox(height: 20),
+            if (authState.errorMessage != null)
+              Text(
+                authState.errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
           ],
         ),

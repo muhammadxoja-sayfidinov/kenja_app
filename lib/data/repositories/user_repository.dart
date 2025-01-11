@@ -1,92 +1,146 @@
+// lib/data/repositories/user_repository.dart
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:kenja_app/data/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../config/constants.dart';
+import '../models/profile_completion_model.dart';
+import '../models/register_initial_model.dart';
+import '../models/user_profile.dart';
+import '../models/verify_code_response.dart';
+
 class UserRepository {
-  final String baseUrl = "https://owntrainer.uz/api/users/profile/";
+  final String baseUrl;
 
-  // Foydalanuvchi ma'lumotlarini olish
-  Future<User> fetchUser() async {
-    final accessToken = await _getAccessToken();
-    try {
-      final response = await http.get(
-        Uri.parse(baseUrl),
-        headers: _buildHeaders(accessToken),
-      );
+  UserRepository({
+    required this.baseUrl,
+  });
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        return User.fromJson(data);
-      } else if (response.statusCode == 403) {
-        throw Exception("403 xatolik: Ruxsat etilmagan so‘rov.");
-      } else {
-        throw Exception("Xatolik yuz berdi: ${response.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Xatolik yuz berdi: $e");
+  // Ro'yxatdan o'tish
+  Future<int> registerInitial(RegisterInitialModel model) async {
+    final Map<String, String> body = {
+      'first_name': model.firstName,
+      'last_name': model.lastName,
+      'email_or_phone': model.emailOrPhone,
+      'password': model.password,
+    };
+    final url = Uri.parse('$baseUrl/api/users/register/initial/');
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return data['user_id']; // Serverdan qaytgan ID
+    } else {
+      throw Exception('Failed to register: ${response.body}');
     }
   }
 
-  // Foydalanuvchi ma'lumotlarini yangilash
-  Future<bool> updateUser(User user) async {
-    final accessToken = await _getAccessToken();
-    final params = _paramsFromUser(user);
+  // Tasdiqlash
+  Future<VerifyCodeResponse> verifyCode(int userId, String code) async {
+    final body = {
+      "user_id": userId.toString(),
+      "code": code,
+    };
+    final url = Uri.parse('$baseUrl/api/users/verify-code/');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+    print(response.statusCode);
 
-    try {
-      final response = await http.put(
-        Uri.parse(baseUrl),
-        headers: _buildHeaders(accessToken),
-        body: jsonEncode(params),
-      );
-
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return VerifyCodeResponse.fromJson(data);
+    } else {
+      throw Exception('Failed to verify code: ${response.body}');
     }
   }
 
-  // Tokenni olish
-  Future<String> _getAccessToken() async {
+  // Profilni to'ldirish
+  Future<void> completeProfile(ProfileCompletionModel model) async {
+    final url = Uri.parse('$baseUrl/api/users/profile/complete/');
     final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
+    final accessToken = prefs.getString(Constants.accessTokenKey);
+
     if (accessToken == null) {
-      throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
+      throw Exception('Access token not found');
     }
-    return accessToken;
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(model.toJson()),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to complete profile: ${response.body}');
+    }
   }
 
-  // Headerlarni yaratish
-  Map<String, String> _buildHeaders(String accessToken) {
-    return {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $accessToken',
-      'Content-Type': 'application/json',
-    };
+  // Profil ma'lumotlarini olish
+  Future<UserProfile> getUserProfile() async {
+    final url = Uri.parse('$baseUrl/api/users/profile/');
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString(Constants.accessTokenKey);
+
+    if (accessToken == null) {
+      throw Exception('Access token not found');
+    }
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return UserProfile.fromJson(data);
+    } else {
+      throw Exception('Failed to fetch user profile: ${response.body}');
+    }
   }
 
-  // Foydalanuvchi obyektidan parametrlarni yaratish
-  Map<String, dynamic> _paramsFromUser(User user) {
-    return {
-      "first_name": user.firstName,
-      "last_name": user.lastName,
-      "email_or_phone": user.emailOrPhone,
-      "gender": user.gender,
-      "country": user.country,
-      "age": user.age,
-      "height": user.height,
-      "weight": user.weight,
-      "goal": user.goal,
-      "level": user.level,
-      "is_premium": user.isPremium,
-      "photo": user.photo,
-      "language": user.language,
-      "is_active": user.isActive,
-    };
+  // Profilni yangilash
+  Future<void> updateProfile(ProfileCompletionModel model) async {
+    final url = Uri.parse('$baseUrl/api/users/profile/update/');
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString(Constants.accessTokenKey);
+
+    if (accessToken == null) {
+      throw Exception('Access token not found');
+    }
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(model.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update profile: ${response.body}');
+    }
   }
 }

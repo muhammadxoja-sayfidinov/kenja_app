@@ -9,14 +9,13 @@ import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 import '../../../core/constants/colors.dart';
 import '../../widgets/custom_toggle_buttons.dart';
 
-final goalProvider = StateProvider<String?>((ref) => null);
-
 class GoalScreen extends ConsumerWidget {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController goalController = TextEditingController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goal = ref.watch(goalProvider);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: Stack(children: [
         Image.asset(

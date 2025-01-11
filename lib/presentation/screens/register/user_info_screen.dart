@@ -7,13 +7,15 @@ import 'package:kenja_app/presentation/widgets/register/login_register_toggle.da
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
-import '../../state_management/product_provider.dart';
-import '../../state_management/tips_provider.dart';
+import '../../../data/providers/providers.dart';
 import '../../widgets/custom_text_form_field.dart';
 import 'goal_screen.dart';
 
 class UserInfoScreen extends ConsumerWidget {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
 
   UserInfoScreen({super.key});
 
@@ -21,14 +23,10 @@ class UserInfoScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageController1 = ref.watch(tipsPageControllerProvider);
-
-    final gender = ref.watch(genderProvider);
-    final age = ref.watch(ageProvider);
-    final height = ref.watch(heightProvider);
-    final weight = ref.watch(weightProvider);
+    final profileState = ref.watch(profileCompletionNotifierProvider);
+    final profileNotifier =
+        ref.read(profileCompletionNotifierProvider.notifier);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -72,30 +70,32 @@ class UserInfoScreen extends ConsumerWidget {
                       24.verticalSpace,
                       LoginRegisterToggle(
                           onToggle: (int index) {
-                            ref.read(genderProvider.notifier).state =
-                                index == 0 ? 'Erkak' : 'Ayol';
-                            index == 0 ? 'Erkak' : 'Ayol';
+                            profileNotifier
+                                .setGender(index == 0 ? 'Male' : 'Female');
+                            index == 0 ? 'Male' : 'Female';
+                            index != 0 ? 'Male' : 'Female';
                           },
                           text1: 'Erkak',
                           text2: 'Ayol'),
                       24.verticalSpace,
                       CustomTextFormField(
                         labelText: 'Yoshingiz',
-                        initialValue: age,
+                        // initialValue: age,
                         keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Iltimos, yoshingizni kiriting';
+                        onSaved: (value) {
+                          final age = int.tryParse(value!);
+                          if (age != null) {
+                            profileNotifier.setAge(age);
                           }
                           return null;
                         },
-                        onSaved: (value) =>
-                            ref.read(ageProvider.notifier).state = value,
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Enter age' : null,
                       ),
                       24.verticalSpace,
                       CustomTextFormField(
                         labelText: 'Bo\'yingiz',
-                        initialValue: height,
+                        // initialValue: height,
                         keyboardType: TextInputType.number,
                         suffixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -105,26 +105,22 @@ class UserInfoScreen extends ConsumerWidget {
                             textAlign: TextAlign.start,
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Iltimos, bo\'yingizni kiriting';
+                        onSaved: (value) {
+                          final height = double.tryParse(value!);
+                          if (height != null) {
+                            profileNotifier.setHeight(height);
                           }
                           return null;
                         },
-                        onSaved: (value) =>
-                            ref.read(heightProvider.notifier).state = value,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Enter height'
+                            : null,
                       ),
                       24.verticalSpace,
                       CustomTextFormField(
                         labelText: 'Vazningiz',
-                        initialValue: weight,
+                        // initialValue: weight,
                         keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Iltimos, vazningizni kiriting';
-                          }
-                          return null;
-                        },
                         suffixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -133,15 +129,22 @@ class UserInfoScreen extends ConsumerWidget {
                             textAlign: TextAlign.start,
                           ),
                         ),
-                        onSaved: (value) =>
-                            ref.read(weightProvider.notifier).state = value,
+                        onSaved: (value) {
+                          final weight = double.tryParse(value!);
+                          if (weight != null) {
+                            profileNotifier.setWeight(weight);
+                          }
+                          return null;
+                        },
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Enter weight'
+                            : null,
                       ),
                       24.verticalSpace,
                       isDark
                           ? MyNextBottomWhite(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -154,7 +157,6 @@ class UserInfoScreen extends ConsumerWidget {
                           : MyNextBottom(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

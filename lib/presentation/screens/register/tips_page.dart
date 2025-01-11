@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 import 'package:kenja_app/presentation/widgets/skip_bottom.dart';
 
-import '../../state_management/tips_provider.dart';
 import '../../widgets/next_bottom.dart';
 import '../../widgets/register/tips_carousel.dart';
-import '../mainHome.dart';
 import 'login_page.dart';
+
+final tipsPageControllerProvider = Provider<PageController>((ref) {
+  return PageController();
+});
 
 class TipsScreen extends ConsumerStatefulWidget {
   @override
@@ -88,7 +90,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MainHome()));
+                                      builder: (context) => const LoginPage()));
                             },
                           ),
                         ],

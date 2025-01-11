@@ -20,7 +20,7 @@ class _LoginRegisterToggleState extends State<LoginRegisterToggle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(4.0),
       decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark
               ? darkColor

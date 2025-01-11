@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/register.dart';
 
@@ -23,8 +24,6 @@ class RegistrationRepository {
       'password': request.password,
     };
 
-    print('Request body: $body');
-
     final response = await http.post(
       url,
       headers: {
@@ -34,14 +33,9 @@ class RegistrationRepository {
       body: body,
     );
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     // 200 va 201 ikkalasi ham muvaffaqiyatli
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
-
-      print('Response data: $data');
 
       // Agar xabar "Verification code resent" bo'lsa, bu yangi registratsiya emas
       if (data['message']?.toLowerCase().contains('resent') == true) {
@@ -63,6 +57,7 @@ class RegistrationRepository {
   /// POST /api/users/verify-code/
   /// Body: { "user_id": 4, "code": "1046" }
   Future<VerifyCodeResponse> verifyCode(int userId, String code) async {
+    print('object');
     final url = Uri.parse('$baseUrl/users/verify-code/');
     final body = {
       "user_id": userId.toString(),
@@ -78,9 +73,6 @@ class RegistrationRepository {
       body: jsonEncode(body),
     );
 
-    print('Verify Code Response status: ${response.statusCode}');
-    print('Verify Code Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return VerifyCodeResponse.fromJson(data);
@@ -88,6 +80,39 @@ class RegistrationRepository {
       final errorData = jsonDecode(response.body);
       final msg = errorData['message'] ?? 'Tasdiqlashda xatolik';
       throw Exception(msg);
+    }
+  }
+}
+
+Future<String> _getAccessToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  final accessToken = prefs.getString('access_token');
+  if (accessToken == null) {
+    throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
+  }
+  return accessToken;
+}
+
+class ProfileRepository {
+  final String baseUrl = 'https://owntrainer.uz/api';
+
+  Future<String> completeProfile(Map<String, dynamic> data) async {
+    final accessToken = await _getAccessToken();
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/users/profile/complete/'),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken', // Tokenni joylashtiring
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['message'];
+    } else {
+      throw Exception('Failed to complete profile: ${response.body}');
     }
   }
 }

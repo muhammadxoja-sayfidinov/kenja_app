@@ -13,23 +13,23 @@ class LoginRequest {
   }
 }
 
-// login_response.dart
+// lib/data/models/login.dart
 class LoginResponse {
   final String message;
-  final String refresh;
   final String access;
+  final String refresh;
 
   LoginResponse({
     required this.message,
-    required this.refresh,
     required this.access,
+    required this.refresh,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      message: json['message'] ?? '',
-      refresh: json['refresh'] ?? '',
-      access: json['access'] ?? '',
+      message: json['message'],
+      access: json['access'],
+      refresh: json['refresh'],
     );
   }
 }

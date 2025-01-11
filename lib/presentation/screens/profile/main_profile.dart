@@ -5,12 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/styles.dart';
-import 'package:kenja_app/presentation/screens/profile/profile_edit_screen.dart';
 import 'package:kenja_app/presentation/screens/profile/user_details_screen.dart';
 import 'package:kenja_app/presentation/widgets/pro_plan.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../../data/providers/profile_provider.dart';
+import '../../../data/providers/providers.dart';
 import '../../widgets/chooseLanguage.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -20,7 +19,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userListAsync = ref.watch(userListProvider);
+    final userListAsync = ref.watch(userProfileProvider);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: userListAsync.when(
@@ -28,10 +27,6 @@ class ProfileScreen extends ConsumerWidget {
         itemCount: 1,
         itemBuilder: (context, index) {
           final user = users;
-          if (users == null) {
-            return const Center(
-                child: Text("Foydalanuvchi ma'lumotlari topilmadi."));
-          }
           return Padding(
             padding: EdgeInsets.all(16.w),
             child: SingleChildScrollView(
@@ -67,11 +62,11 @@ class ProfileScreen extends ConsumerWidget {
                   4.verticalSpace,
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileEditScreen()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => ProfileEditScreen()),
+                      // );
                     },
                     child: Container(
                       width: 90.w,

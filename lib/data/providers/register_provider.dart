@@ -118,3 +118,32 @@ final registrationNotifierProvider =
   final repo = ref.watch(registrationRepositoryProvider);
   return RegistrationNotifier(repo);
 });
+
+final profileRepositoryProvider =
+    Provider<ProfileRepository>((ref) => ProfileRepository());
+
+// ViewModel (StateNotifier)
+class ProfileNotifier extends StateNotifier<Map<String, dynamic>> {
+  ProfileNotifier() : super({});
+
+  void updateField(String key, dynamic value) {
+    state = {
+      ...state,
+      key: value,
+    };
+  }
+
+  Future<void> submitProfile(ProfileRepository repository) async {
+    try {
+      await repository.completeProfile(state);
+    } catch (e) {
+      throw Exception('Error completing profile: $e');
+    }
+  }
+}
+
+// Provider for ViewModel
+final profileNotifierProvider =
+    StateNotifierProvider<ProfileNotifier, Map<String, dynamic>>(
+  (ref) => ProfileNotifier(),
+);

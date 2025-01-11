@@ -2,8 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../repositories/authentication_repository.dart';
-
 // TextEditingController for username
 final usernameProvider = Provider<TextEditingController>((ref) {
   return TextEditingController();
@@ -33,6 +31,6 @@ final confirmPasswordControllerProvider =
 });
 // Terms and conditions acceptance (this can remain as a boolean flag)
 final termsAcceptedProvider = StateProvider<bool>((ref) => false);
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(),
-);
+// final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+//   (ref) => AuthNotifier(),
+// );

@@ -51,7 +51,7 @@ class _TipsCarouselState extends State<TipsCarousel> {
           width: 52.w,
           decoration: BoxDecoration(
               color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromRGBO(27, 46, 64, 1)
+                  ? const Color.fromRGBO(27, 46, 64, 1)
                   : darker,
               borderRadius: BorderRadius.circular(24.r)),
           child: SmoothPageIndicator(

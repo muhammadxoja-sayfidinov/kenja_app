@@ -46,13 +46,23 @@ class RegisterResponse {
   }
 }
 
+// lib/data/models/verify_code_response.dart
+
 class VerifyCodeResponse {
+  final String accessToken;
+  final String refreshToken;
   final String message;
 
-  VerifyCodeResponse({required this.message});
+  VerifyCodeResponse({
+    required this.accessToken,
+    required this.refreshToken,
+    required this.message,
+  });
 
   factory VerifyCodeResponse.fromJson(Map<String, dynamic> json) {
     return VerifyCodeResponse(
+      accessToken: json['access'] ?? '',
+      refreshToken: json['refresh'] ?? '',
       message: json['message'] ?? '',
     );
   }
