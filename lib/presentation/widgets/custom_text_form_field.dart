@@ -41,6 +41,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return TextFormField(
+      onChanged: widget.onSaved,
       cursorColor: isDark ? white : mainDarkColor,
       controller: widget.controller,
       obscureText: _obscureText,

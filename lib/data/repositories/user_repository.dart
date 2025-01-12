@@ -1,23 +1,26 @@
 // lib/data/repositories/user_repository.dart
+
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/constants.dart';
-import '../models/profile_completion_model.dart';
-import '../models/register_initial_model.dart';
+import '../models/auth/login.dart';
+import '../models/auth/profile_completion_model.dart';
+import '../models/auth/register_initial_model.dart';
 import '../models/user_profile.dart';
-import '../models/verify_code_response.dart';
 
 class UserRepository {
   final String baseUrl;
+  final FlutterSecureStorage secureStorage;
 
   UserRepository({
     required this.baseUrl,
+    required this.secureStorage,
   });
 
-  // Ro'yxatdan o'tish
+  /// Ro'yxatdan o'tish (initial)
   Future<int> registerInitial(RegisterInitialModel model) async {
     final Map<String, String> body = {
       'first_name': model.firstName,
@@ -43,7 +46,7 @@ class UserRepository {
     }
   }
 
-  // Tasdiqlash
+  /// Tasdiqlash kodi yuborish
   Future<VerifyCodeResponse> verifyCode(int userId, String code) async {
     final body = {
       "user_id": userId.toString(),
@@ -58,7 +61,6 @@ class UserRepository {
       },
       body: jsonEncode(body),
     );
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -68,36 +70,86 @@ class UserRepository {
     }
   }
 
-  // Profilni to'ldirish
-  Future<void> completeProfile(ProfileCompletionModel model) async {
-    final url = Uri.parse('$baseUrl/api/users/profile/complete/');
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString(Constants.accessTokenKey);
-
-    if (accessToken == null) {
-      throw Exception('Access token not found');
-    }
+  /// Login qilish
+  Future<LoginResponse> login(String emailOrPhone, String password) async {
+    final url = Uri.parse('$baseUrl/api/users/login/');
+    final body = jsonEncode({
+      'email_or_phone': emailOrPhone,
+      'password': password,
+    });
 
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return LoginResponse.fromJson(data);
+    } else {
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['detail'] ?? 'Login failed');
+    }
+  }
+
+  /// Tokenni yangilash
+  Future<LoginResponse> refreshToken(String refreshToken) async {
+    final url = Uri.parse('$baseUrl/api/token/refresh/');
+    final body = jsonEncode({'refresh': refreshToken});
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return LoginResponse.fromJson(data);
+    } else {
+      throw Exception('Failed to refresh token: ${response.body}');
+    }
+  }
+
+  /// Profilni to'ldirish
+  Future<void> completeProfile(ProfileCompletionModel model) async {
+    final url = Uri.parse('$baseUrl/api/users/profile/complete/');
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
+
+    if (accessToken == null) {
+      throw Exception('Access token not found');
+    }
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer $accessToken',
         'Accept': 'application/json',
       },
-      body: jsonEncode(model.toJson()),
+      body: model.toFormData(), // toFormData() Map<String, String> qaytaradi
     );
+
+    print('Yuborilayotgan ma’lumotlar: ${model.toFormData()}');
+    print(response.statusCode);
+    print('Server javobi: ${response.body}');
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to complete profile: ${response.body}');
     }
   }
 
-  // Profil ma'lumotlarini olish
+  /// Profil ma'lumotlarini olish
   Future<UserProfile> getUserProfile() async {
     final url = Uri.parse('$baseUrl/api/users/profile/');
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString(Constants.accessTokenKey);
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
 
     if (accessToken == null) {
       throw Exception('Access token not found');
@@ -119,11 +171,10 @@ class UserRepository {
     }
   }
 
-  // Profilni yangilash
+  /// Profilni yangilash
   Future<void> updateProfile(ProfileCompletionModel model) async {
     final url = Uri.parse('$baseUrl/api/users/profile/update/');
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString(Constants.accessTokenKey);
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
 
     if (accessToken == null) {
       throw Exception('Access token not found');
@@ -136,7 +187,7 @@ class UserRepository {
         'Authorization': 'Bearer $accessToken',
         'Accept': 'application/json',
       },
-      body: jsonEncode(model.toJson()),
+      body: jsonEncode(model.toFormData()),
     );
 
     if (response.statusCode != 200) {

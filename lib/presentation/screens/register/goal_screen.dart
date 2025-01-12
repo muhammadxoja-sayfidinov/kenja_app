@@ -7,14 +7,22 @@ import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../widgets/custom_toggle_buttons.dart';
+import '../../../data/providers/profile_provider.dart';
 
 class GoalScreen extends ConsumerWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController goalController = TextEditingController();
 
+  GoalScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileCompletionProvider);
+    final profileNotifier = ref.read(profileCompletionProvider.notifier);
+    const String goal1 = "Yog' yuqtish";
+    const String goal2 = "ok";
+    const String goal3 = "ozish";
+
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Stack(children: [
@@ -55,9 +63,138 @@ class GoalScreen extends ConsumerWidget {
                     style: CustomTextStyle.style700,
                   ),
                   24.verticalSpace,
-                  const CustomToggleButtons(
-                    pageIndex: 0,
+                  GestureDetector(
+                    onTap: () {
+                      profileNotifier.setGoal(goal1);
+                    },
+                    child: Container(
+                      height: 48.w,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: profileState.goal.toString() == goal1
+                            ? isDark
+                                ? Colors.transparent
+                                : Colors.transparent
+                            : isDark
+                                ? mainDarkColor
+                                : darkColor,
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          color: profileState.goal.toString() == goal1
+                              ? isDark
+                                  ? Colors.white
+                                  : grey
+                              : Colors.white,
+                          width:
+                              profileState.goal.toString() == goal1 ? 2.0 : 0.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          goal1,
+                          style: TextStyle(
+                            color: profileState.goal.toString() == goal1
+                                ? isDark
+                                    ? Colors.white
+                                    : darkColor
+                                : grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
+                  SizedBox(height: 16.h),
+                  GestureDetector(
+                    onTap: () {
+                      profileNotifier.setGoal(goal2);
+                    },
+                    child: Container(
+                      height: 48.w,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: profileState.goal.toString() == goal2
+                            ? isDark
+                                ? Colors.transparent
+                                : Colors.transparent
+                            : isDark
+                                ? mainDarkColor
+                                : darkColor,
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          color: profileState.goal.toString() == goal2
+                              ? isDark
+                                  ? Colors.white
+                                  : grey
+                              : Colors.white,
+                          width:
+                              profileState.goal.toString() == goal2 ? 2.0 : 0.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          goal2,
+                          style: TextStyle(
+                            color: profileState.goal.toString() == goal2
+                                ? isDark
+                                    ? Colors.white
+                                    : darkColor
+                                : grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  GestureDetector(
+                    onTap: () {
+                      profileNotifier.setGoal(goal3);
+                    },
+                    child: Container(
+                      height: 48.w,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: profileState.goal.toString() == goal3
+                            ? isDark
+                                ? Colors.transparent
+                                : Colors.transparent
+                            : isDark
+                                ? mainDarkColor
+                                : darkColor,
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          color: profileState.goal.toString() == goal3
+                              ? isDark
+                                  ? Colors.white
+                                  : grey
+                              : Colors.white,
+                          width:
+                              profileState.goal.toString() == goal3 ? 2.0 : 0.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          goal3,
+                          style: TextStyle(
+                            color: profileState.goal.toString() == goal3
+                                ? isDark
+                                    ? Colors.white
+                                    : darkColor
+                                : grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // CustomToggleButtons(
+                  //   pageIndex: profileState.,
+                  // ),
                   24.verticalSpace,
                   isDark
                       ? MyNextBottomWhite(
@@ -65,7 +202,8 @@ class GoalScreen extends ConsumerWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ActivityLevelScreen(),
+                                builder: (context) =>
+                                    const ActivityLevelScreen(),
                               ),
                             );
                           },
@@ -75,7 +213,8 @@ class GoalScreen extends ConsumerWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ActivityLevelScreen(),
+                                builder: (context) =>
+                                    const ActivityLevelScreen(),
                               ),
                             );
                           },

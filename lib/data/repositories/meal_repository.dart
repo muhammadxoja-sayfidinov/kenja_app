@@ -1,28 +1,26 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../config/constants.dart';
 import '../models/meal_model.dart';
 
 class MealsService {
-  static const String baseUrl = 'https://owntrainer.uz/api/food/api/meals/';
+  final String baseUrl;
+  final FlutterSecureStorage secureStorage;
 
-  Future<String> _getAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
-    if (accessToken == null) {
-      throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
-    }
-    return accessToken;
-  }
+  MealsService(
+    this.baseUrl,
+    this.secureStorage,
+  );
 
   /// API’dan “meals” ma’lumotlarini olib kelish funksiyasi
   Future<List<Meal>> fetchMeals() async {
-    final accessToken = await _getAccessToken();
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
 
     final response = await http.get(
-      Uri.parse(baseUrl),
+      Uri.parse('$baseUrl/food/api/meals/'),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $accessToken',

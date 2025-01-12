@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../config/constants.dart';
-import '../models/profile_completion_model.dart';
-import '../models/register_initial_model.dart';
+import '../models/auth/profile_completion_model.dart';
+import '../models/auth/register_initial_model.dart';
 import '../models/user_profile.dart';
 import '../repositories/user_repository.dart';
 
@@ -19,6 +19,7 @@ final userRepositoryProvider = Provider<UserRepository>((ref) {
   final storage = ref.watch(secureStorageProvider);
   return UserRepository(
     baseUrl: Constants.baseUrl,
+    secureStorage: storage,
   );
 });
 

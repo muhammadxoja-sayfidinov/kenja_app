@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kenja_app/core/constants/styles.dart';
+import 'package:kenja_app/presentation/screens/profile/profile_edit_screen.dart';
 import 'package:kenja_app/presentation/screens/profile/user_details_screen.dart';
 import 'package:kenja_app/presentation/widgets/pro_plan.dart';
 
@@ -53,20 +54,23 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   CircleAvatar(
                     radius: 50.r,
-                    backgroundImage: NetworkImage(
-                        "https://owntrainer.uz//${user.photo}"), // Replace with actual image URL
+                    backgroundImage: user.photo != null
+                        ? NetworkImage("https://owntrainer.uz//${user.photo}")
+                        : const AssetImage(
+                            'assets/images/avatar.jpeg', // Replace with your image URL
+                          ), // Replace with actual image URL
                   ),
                   12.verticalSpace,
                   Text('${user.firstName} ${user.lastName}',
                       style: CustomTextStyle.style600),
                   4.verticalSpace,
                   InkWell(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => ProfileEditScreen()),
-                      // );
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfileEditScreen()),
+                      );
                     },
                     child: Container(
                       width: 90.w,

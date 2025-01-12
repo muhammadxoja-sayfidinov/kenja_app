@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../../data/models/register_initial_model.dart';
-import '../../../data/repositories/authentication_repository.dart';
+import '../../../data/models/auth/register_initial_model.dart';
+import '../../../data/providers/auth_provider.dart';
 import '../../screens/register/register_verfication_code_page.dart';
 import '../../widgets/custom_text_form_field.dart';
 

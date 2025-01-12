@@ -7,8 +7,7 @@ import 'package:kenja_app/presentation/widgets/next_bottom_white.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
-import '../../../data/providers/api_controllers.dart';
-import '../../../data/repositories/authentication_repository.dart';
+import '../../../data/providers/auth_provider.dart';
 import '../../screens/mainHome.dart';
 import '../custom_text_form_field.dart';
 import '../next_bottom.dart';

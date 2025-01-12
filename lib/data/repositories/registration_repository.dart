@@ -1,20 +1,18 @@
-// repositories/registration_repository.dart
+// lib/repositories/registration_repository.dart
 
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/register.dart';
+import '../models/auth/register_initial_model.dart';
 
 class RegistrationRepository {
   final String baseUrl;
 
   RegistrationRepository({required this.baseUrl});
 
-  /// POST /api/users/register/initial/
-  /// Body: { "first_name": ..., "last_name": ..., "email_or_phone": ..., "password": ... }
-  Future<RegisterResponse> registerInitial(RegisterRequest request) async {
+  /// Ro'yxatdan o'tish (initial)
+  Future<RegisterResponse> registerInitial(RegisterInitialModel request) async {
     final url = Uri.parse('$baseUrl/users/register/initial/');
 
     final Map<String, String> body = {
@@ -54,10 +52,8 @@ class RegistrationRepository {
     }
   }
 
-  /// POST /api/users/verify-code/
-  /// Body: { "user_id": 4, "code": "1046" }
+  /// Tasdiqlash kodi yuborish
   Future<VerifyCodeResponse> verifyCode(int userId, String code) async {
-    print('object');
     final url = Uri.parse('$baseUrl/users/verify-code/');
     final body = {
       "user_id": userId.toString(),
@@ -80,39 +76,6 @@ class RegistrationRepository {
       final errorData = jsonDecode(response.body);
       final msg = errorData['message'] ?? 'Tasdiqlashda xatolik';
       throw Exception(msg);
-    }
-  }
-}
-
-Future<String> _getAccessToken() async {
-  final prefs = await SharedPreferences.getInstance();
-  final accessToken = prefs.getString('access_token');
-  if (accessToken == null) {
-    throw Exception('Foydalanuvchi autentifikatsiya qilmagan');
-  }
-  return accessToken;
-}
-
-class ProfileRepository {
-  final String baseUrl = 'https://owntrainer.uz/api';
-
-  Future<String> completeProfile(Map<String, dynamic> data) async {
-    final accessToken = await _getAccessToken();
-
-    final response = await http.patch(
-      Uri.parse('$baseUrl/users/profile/complete/'),
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken', // Tokenni joylashtiring
-      },
-      body: json.encode(data),
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['message'];
-    } else {
-      throw Exception('Failed to complete profile: ${response.body}');
     }
   }
 }

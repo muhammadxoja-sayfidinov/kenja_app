@@ -1,4 +1,5 @@
-// lib/utils/constants.dart
+// lib/config/constants.dart
+
 class Constants {
   static const String baseUrl = 'https://owntrainer.uz';
   static const String accessTokenKey = 'access_token';

@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kenja_app/data/providers/providers.dart';
+import 'package:kenja_app/data/providers/session_provider.dart';
 
 import '../models/exercise_model.dart';
 import '../models/workout_categories.dart';
@@ -6,7 +8,9 @@ import '../repositories/workout_categories_repository.dart';
 
 /// WorkoutService ni `Provider` orqali taqdim etish
 final workoutServiceProvider = Provider<WorkoutService>((ref) {
-  return WorkoutService();
+  final secureStorage = ref.watch(secureStorageProvider);
+  final baseUrl = ref.watch(baseUrlProvider);
+  return WorkoutService(baseUrl, secureStorage);
 });
 
 /// Kategoriyalar ro‘yxatini yuklash uchun FutureProvider

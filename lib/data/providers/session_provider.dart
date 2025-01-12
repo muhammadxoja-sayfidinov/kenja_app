@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kenja_app/data/providers/providers.dart';
 
 import '../models/meal_model.dart';
 import '../models/session_model.dart';
@@ -12,21 +13,26 @@ final baseUrlProvider = Provider<String>((ref) {
 
 /// Session repository provayderi
 final sessionRepositoryProvider = Provider<SessionRepository>((ref) {
+  final secureStorage = ref.watch(secureStorageProvider);
   final baseUrl = ref.watch(baseUrlProvider);
-  return SessionRepository(baseUrl: baseUrl);
+  return SessionRepository(baseUrl: baseUrl, secureStorage);
 });
 
 /// Workout Category repository provayderi
 final workoutCategoryRepositoryProvider =
     Provider<WorkoutCategoryRepository>((ref) {
   final baseUrl = ref.watch(baseUrlProvider);
-  return WorkoutCategoryRepository(baseUrl: baseUrl);
+  final secureStorage = ref.watch(secureStorageProvider);
+
+  return WorkoutCategoryRepository(baseUrl: baseUrl, secureStorage);
 });
 
 /// Meal repository provayderi
 final mealRepositoryProvider = Provider<MealRepository>((ref) {
   final baseUrl = ref.watch(baseUrlProvider);
-  return MealRepository(baseUrl: baseUrl);
+  final secureStorage = ref.watch(secureStorageProvider);
+
+  return MealRepository(baseUrl: baseUrl, secureStorage);
 });
 
 /// Sessions ma'lumotini oladigan future provider

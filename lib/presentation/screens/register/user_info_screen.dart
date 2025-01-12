@@ -7,7 +7,7 @@ import 'package:kenja_app/presentation/widgets/register/login_register_toggle.da
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
-import '../../../data/providers/providers.dart';
+import '../../../data/providers/profile_provider.dart';
 import '../../widgets/custom_text_form_field.dart';
 import 'goal_screen.dart';
 
@@ -20,12 +20,12 @@ class UserInfoScreen extends ConsumerWidget {
   UserInfoScreen({super.key});
 
   int currentPage = 0;
+  int gender = 5;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileCompletionNotifierProvider);
-    final profileNotifier =
-        ref.read(profileCompletionNotifierProvider.notifier);
+    final profileState = ref.watch(profileCompletionProvider);
+    final profileNotifier = ref.read(profileCompletionProvider.notifier);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Form(
@@ -70,6 +70,7 @@ class UserInfoScreen extends ConsumerWidget {
                       24.verticalSpace,
                       LoginRegisterToggle(
                           onToggle: (int index) {
+                            gender = 3;
                             profileNotifier
                                 .setGender(index == 0 ? 'Male' : 'Female');
                             index == 0 ? 'Male' : 'Female';
@@ -80,7 +81,7 @@ class UserInfoScreen extends ConsumerWidget {
                       24.verticalSpace,
                       CustomTextFormField(
                         labelText: 'Yoshingiz',
-                        // initialValue: age,
+                        controller: ageController,
                         keyboardType: TextInputType.number,
                         onSaved: (value) {
                           final age = int.tryParse(value!);
@@ -95,7 +96,7 @@ class UserInfoScreen extends ConsumerWidget {
                       24.verticalSpace,
                       CustomTextFormField(
                         labelText: 'Bo\'yingiz',
-                        // initialValue: height,
+                        controller: heightController,
                         keyboardType: TextInputType.number,
                         suffixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -118,6 +119,7 @@ class UserInfoScreen extends ConsumerWidget {
                       ),
                       24.verticalSpace,
                       CustomTextFormField(
+                        controller: weightController,
                         labelText: 'Vazningiz',
                         // initialValue: weight,
                         keyboardType: TextInputType.number,
@@ -156,6 +158,9 @@ class UserInfoScreen extends ConsumerWidget {
                             )
                           : MyNextBottom(
                               onTap: () {
+                                if (gender == 5) {
+                                  profileNotifier.setGender('Male');
+                                }
                                 if (_formKey.currentState!.validate()) {
                                   Navigator.push(
                                     context,

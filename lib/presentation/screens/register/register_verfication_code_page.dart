@@ -5,7 +5,7 @@ import 'package:kenja_app/presentation/screens/register/user_info_screen.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
-import '../../../data/repositories/authentication_repository.dart';
+import '../../../data/providers/auth_provider.dart';
 import '../../widgets/next_bottom.dart';
 
 class VerificationRegisterCodePage extends ConsumerStatefulWidget {

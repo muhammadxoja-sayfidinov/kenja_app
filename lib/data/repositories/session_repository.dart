@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../config/constants.dart';
 import '../models/meal_model.dart';
 import '../models/session_model.dart';
 import '../models/workout_categories.dart';
@@ -18,11 +20,12 @@ Future<String> _getAccessToken() async {
 
 class SessionRepository {
   final String baseUrl;
+  final FlutterSecureStorage secureStorage;
 
-  SessionRepository({required this.baseUrl});
+  SessionRepository(this.secureStorage, {required this.baseUrl});
 
   Future<List<Session>> fetchSessions() async {
-    final accessToken = await _getAccessToken();
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
 
     final url = Uri.parse('$baseUrl/exercise/api/sessions/');
     final response = await http.get(
@@ -45,12 +48,13 @@ class SessionRepository {
 
 class WorkoutCategoryRepository {
   final String baseUrl;
+  final FlutterSecureStorage secureStorage;
 
-  WorkoutCategoryRepository({required this.baseUrl});
+  WorkoutCategoryRepository(this.secureStorage, {required this.baseUrl});
 
   /// Masalan, bitta ID ga ko‘ra olmoqchi bo‘lsak:
   Future<WorkoutCategory> fetchWorkoutCategoryById(int id) async {
-    final accessToken = await _getAccessToken();
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
     final url = Uri.parse('$baseUrl/exercise/api/workout-categories/$id/');
     final response = await http.get(
       url,
@@ -71,11 +75,12 @@ class WorkoutCategoryRepository {
 
 class MealRepository {
   final String baseUrl;
+  final FlutterSecureStorage secureStorage;
 
-  MealRepository({required this.baseUrl});
+  MealRepository(this.secureStorage, {required this.baseUrl});
 
   Future<Meal> fetchMealById(int id) async {
-    final accessToken = await _getAccessToken();
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
     final url = Uri.parse('$baseUrl/food/api/meals/$id/');
     final response = await http.get(
       url,

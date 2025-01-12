@@ -1,12 +1,12 @@
-// models/register.dart
+// lib/data/models/register_initial_model.dart
 
-class RegisterRequest {
+class RegisterInitialModel {
   final String firstName;
   final String lastName;
   final String emailOrPhone;
   final String password;
 
-  RegisterRequest({
+  RegisterInitialModel({
     required this.firstName,
     required this.lastName,
     required this.emailOrPhone,
@@ -20,6 +20,15 @@ class RegisterRequest {
       'email_or_phone': emailOrPhone,
       'password': password,
     };
+  }
+
+  factory RegisterInitialModel.fromJson(Map<String, dynamic> json) {
+    return RegisterInitialModel(
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      emailOrPhone: json['email_or_phone'],
+      password: json['password'],
+    );
   }
 }
 
@@ -46,24 +55,22 @@ class RegisterResponse {
   }
 }
 
-// lib/data/models/verify_code_response.dart
-
 class VerifyCodeResponse {
+  final String message;
   final String accessToken;
   final String refreshToken;
-  final String message;
 
   VerifyCodeResponse({
+    required this.message,
     required this.accessToken,
     required this.refreshToken,
-    required this.message,
   });
 
   factory VerifyCodeResponse.fromJson(Map<String, dynamic> json) {
     return VerifyCodeResponse(
-      accessToken: json['access'] ?? '',
-      refreshToken: json['refresh'] ?? '',
-      message: json['message'] ?? '',
+      message: json['message'],
+      accessToken: json['access_token'],
+      refreshToken: json['refresh_token'],
     );
   }
 }

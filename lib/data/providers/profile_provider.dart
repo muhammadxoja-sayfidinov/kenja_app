@@ -1,11 +1,12 @@
 // lib/providers/profile_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kenja_app/data/providers/providers.dart';
 
-import '../models/profile_completion_model.dart';
+import '../models/auth/profile_completion_model.dart';
 import '../repositories/user_repository.dart';
 
-// ProfileCompletionState Klass
+// ProfileCompletionState Class
 class ProfileCompletionState {
   final String? gender;
   final int? age;
@@ -45,12 +46,12 @@ class ProfileCompletionState {
       goal: goal ?? this.goal,
       level: level ?? this.level,
       isSubmitting: isSubmitting ?? this.isSubmitting,
-      error: error,
+      error: error ?? this.error,
     );
   }
 }
 
-// ProfileCompletionNotifier Klass
+// ProfileCompletionNotifier Class
 class ProfileCompletionNotifier extends StateNotifier<ProfileCompletionState> {
   final UserRepository _userRepository;
 
@@ -81,9 +82,11 @@ class ProfileCompletionNotifier extends StateNotifier<ProfileCompletionState> {
     state = state.copyWith(level: level);
   }
 
+  /// Profilni to'ldirish
   Future<void> submitProfile() async {
-    state = state.copyWith(isSubmitting: true, error: null);
     try {
+      state = state.copyWith(isSubmitting: true, error: null);
+
       final profile = ProfileCompletionModel(
         gender: state.gender,
         age: state.age,
@@ -95,7 +98,16 @@ class ProfileCompletionNotifier extends StateNotifier<ProfileCompletionState> {
       await _userRepository.completeProfile(profile);
       state = state.copyWith(isSubmitting: false);
     } catch (e) {
-      state = state.copyWith(isSubmitting: false, error: e.toString());
+      state = state.copyWith(
+          isSubmitting: false, error: 'Profilni to\'ldirishda xatolik: $e');
     }
   }
 }
+
+// ProfileCompletionProvider
+final profileCompletionProvider =
+    StateNotifierProvider<ProfileCompletionNotifier, ProfileCompletionState>(
+        (ref) {
+  final userRepository = ref.watch(userRepositoryProvider);
+  return ProfileCompletionNotifier(userRepository);
+});
