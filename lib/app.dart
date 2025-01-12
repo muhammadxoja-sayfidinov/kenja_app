@@ -34,7 +34,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         return AdaptiveTheme(
           light: lightTheme,
           dark: darkTheme,
-          initial: AdaptiveThemeMode.system,
+          initial: AdaptiveThemeMode.light,
           builder: (theme, darkTheme) => MaterialApp(
             title: 'My Fitness App',
             theme: theme,

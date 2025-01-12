@@ -1,5 +1,5 @@
-package com.example.kenja_app
+package com.kenja_app.owntrainer
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()
