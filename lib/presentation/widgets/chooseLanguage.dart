@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kenja_app/core/constants/styles.dart';
 import 'package:kenja_app/presentation/widgets/next_bottom.dart';
@@ -6,12 +7,14 @@ import 'package:kenja_app/presentation/widgets/next_bottom.dart';
 import '../../core/constants/colors.dart';
 
 void showLanguageSelectionSheet(BuildContext context) {
+  bool isDark = Theme.of(context).brightness == Brightness.dark;
+
   showModalBottomSheet(
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
     ),
-    backgroundColor: mainDarkColor,
+    backgroundColor: isDark ? mainDarkColor : Colors.white,
     isScrollControlled: true,
     builder: (context) {
       return Padding(
@@ -27,14 +30,16 @@ void showLanguageSelectionSheet(BuildContext context) {
   );
 }
 
-class LanguageSelectionSheet extends StatefulWidget {
+class LanguageSelectionSheet extends ConsumerStatefulWidget {
   const LanguageSelectionSheet({super.key});
 
   @override
-  _LanguageSelectionSheetState createState() => _LanguageSelectionSheetState();
+  ConsumerState<LanguageSelectionSheet> createState() =>
+      _LanguageSelectionSheetSate();
 }
 
-class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
+class _LanguageSelectionSheetSate
+    extends ConsumerState<LanguageSelectionSheet> {
   String? selectedLanguage = 'O\'zbekcha';
 
   final List<Map<String, String>> languages = [
@@ -46,6 +51,8 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +69,8 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
                 width: 36.w,
                 height: 36.w,
                 decoration: BoxDecoration(
-                    color: darkColor, borderRadius: BorderRadius.circular(8.r)),
+                    color: isDark ? darkColor : darker,
+                    borderRadius: BorderRadius.circular(8.r)),
                 padding: EdgeInsets.all(8.w),
                 child: Image.asset(
                   languages[index]['flag']!,
