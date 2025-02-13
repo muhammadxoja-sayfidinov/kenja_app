@@ -12,9 +12,12 @@ class ExercisesSection extends StatelessWidget {
   const ExercisesSection({
     super.key,
     required this.category,
+    required this.sessionId,
   });
 
   final WorkoutCategory category;
+
+  final int sessionId;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +91,10 @@ class ExercisesSection extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      ExerciseScreen(category: category),
+                                  builder: (_) => ExerciseScreen(
+                                    category: category,
+                                    sessionId: sessionId,
+                                  ),
                                 ),
                               );
                             },

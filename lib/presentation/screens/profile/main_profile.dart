@@ -1,4 +1,3 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,21 +35,21 @@ class ProfileScreen extends ConsumerWidget {
                   15.verticalSpace,
                   Align(
                     alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: IconButton(
-                        icon: Icon(
-                          AdaptiveTheme.of(context).mode.isDark
-                              ? Icons.sunny
-                              : Icons.dark_mode,
-                        ),
-                        onPressed: () {
-                          AdaptiveTheme.of(context).mode.isDark
-                              ? AdaptiveTheme.of(context).setLight()
-                              : AdaptiveTheme.of(context).setDark();
-                        },
-                      ),
-                    ),
+                    child:
+                        Padding(padding: EdgeInsets.all(8.w), child: SizedBox()
+                            //   IconButton(
+                            //   icon: Icon(
+                            //     AdaptiveTheme.of(context).mode.isDark
+                            //         ? Icons.sunny
+                            //         : Icons.dark_mode,
+                            //   ),
+                            //   onPressed: () {
+                            //     AdaptiveTheme.of(context).mode.isDark
+                            //         ? AdaptiveTheme.of(context).setLight()
+                            //         : AdaptiveTheme.of(context).setDark();
+                            //   },
+                            // ),
+                            ),
                   ),
                   CircleAvatar(
                     radius: 50.r,

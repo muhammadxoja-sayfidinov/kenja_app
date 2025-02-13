@@ -17,7 +17,7 @@ final ThemeData lightTheme = ThemeData(
     primary: white,
     secondary: red,
     onError: darkError,
-  ).copyWith(background: white),
+  ).copyWith(surface: white),
   textSelectionTheme:
       const TextSelectionThemeData(selectionHandleColor: mainDarkColor),
 );
@@ -35,7 +35,7 @@ final ThemeData darkTheme = ThemeData(
     primary: mainDarkColor,
     secondary: red,
     onError: lightError,
-  ).copyWith(background: darkColor),
+  ).copyWith(surface: darkColor),
   textSelectionTheme:
       const TextSelectionThemeData(selectionHandleColor: Colors.white),
 );

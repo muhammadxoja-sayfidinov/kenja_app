@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kenja_app/core/constants/styles.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/styles.dart';
 
 class TipsCarousel extends StatefulWidget {
   final PageController pageController;
@@ -73,6 +73,7 @@ class _TipsCarouselState extends State<TipsCarousel> {
   }
 
   Widget _buildTipPage(String text, String imagePath) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         60.verticalSpace,
@@ -90,7 +91,9 @@ class _TipsCarouselState extends State<TipsCarousel> {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: CustomTextStyle.style700,
+            // style: TextStyle(color: Colors.green),
+            style: CustomTextStyle.style700
+                .copyWith(color: isDark ? Colors.white : darkColor),
           ),
         ),
       ],

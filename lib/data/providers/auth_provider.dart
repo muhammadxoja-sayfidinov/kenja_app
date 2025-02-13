@@ -134,8 +134,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> saveTokens(LoginResponse loginResponse) async {
     await _secureStorage.write(
         key: Constants.accessTokenKey, value: loginResponse.access);
-    await _secureStorage.write(
-        key: Constants.refreshTokenKey, value: loginResponse.refresh);
+
+    if (loginResponse.refresh != null) {
+      await _secureStorage.write(
+          key: Constants.refreshTokenKey, value: loginResponse.refresh);
+    }
   }
 
   /// Logout qilish funksiyasi
@@ -149,20 +152,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// Avvaldan autentifikatsiya holatini tekshirish
   Future<void> _checkAuthentication() async {
-    final accessToken =
-        await _secureStorage.read(key: Constants.accessTokenKey);
-    final refreshToken =
-        await _secureStorage.read(key: Constants.refreshTokenKey);
-    if (accessToken != null && refreshToken != null) {
-      state = AuthState(
-        status: AuthStatus.authenticated,
-        loginResponse: LoginResponse(
-          message: 'Already logged in',
-          access: accessToken,
-          refresh: refreshToken,
-        ),
-      );
-    } else {
+    try {
+      final accessToken =
+          await _secureStorage.read(key: Constants.accessTokenKey);
+      final refreshToken =
+          await _secureStorage.read(key: Constants.refreshTokenKey);
+
+      if (accessToken != null && refreshToken != null) {
+        try {
+          // Token validligini tekshirish uchun profil ma'lumotlarini olishga harakat qilish
+          await _userRepository.getUserProfile();
+
+          state = AuthState(
+            status: AuthStatus.authenticated,
+            loginResponse: LoginResponse(
+              message: 'Already logged in',
+              access: accessToken,
+              refresh: refreshToken,
+            ),
+          );
+        } catch (e) {
+          print('Token tekshirishda xatolik: $e');
+          // Token yangilash muvaffaqiyatsiz bo'lsa, logout qilish
+          await logout();
+        }
+      } else {
+        state = AuthState(status: AuthStatus.unauthenticated);
+      }
+    } catch (e) {
+      print('Autentifikatsiya tekshirishda xatolik: $e');
       state = AuthState(status: AuthStatus.unauthenticated);
     }
   }
@@ -218,38 +236,59 @@ class AuthNotifier extends StateNotifier<AuthState> {
       Future<http.Response> Function() request) async {
     try {
       final response = await request();
+      print(
+          'Original so‘rov status kodi: ${response.statusCode}'); // Log qo‘shildi
 
       if (response.statusCode == 401) {
-        // Token muddati tugagan, yangilashga harakat qilish
-        final refreshSuccess = await _refreshToken();
+        print(
+            '401 javob olindi, tokenni yangilashga harakat qilinmoqda'); // Log qo‘shildi
+        final refreshSuccess = await refreshToken();
 
         if (refreshSuccess) {
-          // Yangilangan token bilan original so'rovni qayta yuborish
+          print(
+              'Token yangilandi, original so‘rov qayta yuborilmoqda'); // Log qo‘shildi
           return await request();
+        } else {
+          print('Token yangilanmadi, foydalanuvchi chiqishi'); // Log qo‘shildi
         }
       }
 
       return response;
     } catch (e) {
+      print('So‘rov yuborishda xato: $e'); // Log qo‘shildi
       rethrow;
     }
   }
 
   /// Tokenni yangilash funksiyasi
-  Future<bool> _refreshToken() async {
+  /// Tokenni yangilash funksiyasi
+  Future<bool> refreshToken() async {
     try {
       final refreshToken =
           await _secureStorage.read(key: Constants.refreshTokenKey);
+      print('Olingan refresh token: $refreshToken');
 
       if (refreshToken == null) {
+        print('Refresh token topilmadi');
+        await logout();
         return false;
       }
 
       final newTokens = await _userRepository.refreshToken(refreshToken);
 
+      // Yangi tokenlarni saqlash
       await saveTokens(newTokens);
+
+      // State'ni yangilash
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        loginResponse: newTokens,
+      );
+
+      print('Token muvaffaqiyatli yangilandi');
       return true;
     } catch (e) {
+      print('Token yangilash xatosi: $e');
       await logout();
       return false;
     }

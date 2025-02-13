@@ -5,14 +5,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/styles.dart';
 import '../../../data/models/meal_model.dart';
+import '../../../data/providers/meal_provider.dart';
 import '../../widgets/next_bottom.dart';
 import '../../widgets/next_bottom_white.dart';
 import 'meal_success_screen.dart';
 
 class MealDetailPage extends ConsumerWidget {
   final Meal meal;
+  final int sessionID;
 
-  const MealDetailPage({super.key, required this.meal});
+  const MealDetailPage(
+      {super.key, required this.meal, required this.sessionID});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,23 +156,75 @@ class MealDetailPage extends ConsumerWidget {
                     SizedBox(height: 16.h),
                     isDark
                         ? MyNextBottomWhite(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MealSuccessScreen()),
-                              );
+                            onTap: () async {
+                              try {
+                                // API xizmatidan foydalanib, ovqatni yakunlash so'rovini yuborish
+                                final apiService =
+                                    ref.read(mealsServiceProvider);
+                                await apiService.completeMeal(sessionID,
+                                    meal.id); // session_id = 1, meal_id = 2
+                                // Agar muvaffaqiyatli bo'lsa, natijani ko'rsatish
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MealSuccessScreen()),
+                                );
+                              } catch (e) {
+                                // Xatolik yuz bersa
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Error'),
+                                    content:
+                                        Text('Failed to complete meal: $e'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Close'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             text: 'Qabul qilish')
                         : MyNextBottom(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MealSuccessScreen()),
-                              );
+                            onTap: () async {
+                              try {
+                                // API xizmatidan foydalanib, ovqatni yakunlash so'rovini yuborish
+                                final apiService =
+                                    ref.read(mealsServiceProvider);
+                                await apiService.completeMeal(sessionID,
+                                    meal.id); // session_id = 1, meal_id = 2
+                                // Agar muvaffaqiyatli bo'lsa, natijani ko'rsatish
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MealSuccessScreen()),
+                                );
+                              } catch (e) {
+                                // Xatolik yuz bersa
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Error'),
+                                    content:
+                                        Text('Failed to complete meal: $e'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Close'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             text: 'Qabul qilish'),
                     24.verticalSpace,

@@ -98,23 +98,43 @@ class UserRepository {
 
   /// Tokenni yangilash
   Future<LoginResponse> refreshToken(String refreshToken) async {
+    print('Refresh token jarayoni boshlandi: $refreshToken');
     final url = Uri.parse('$baseUrl/api/token/refresh/');
-    final body = jsonEncode({'refresh': refreshToken});
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: body,
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({'refresh': refreshToken}),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return LoginResponse.fromJson(data);
-    } else {
-      throw Exception('Failed to refresh token: ${response.body}');
+      print('Refresh token javobi: ${response.statusCode}');
+      print('Server javobi: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final loginResponse = LoginResponse.fromJson(data);
+
+        // Yangi tokenlarni saqlash
+        await secureStorage.write(
+            key: Constants.accessTokenKey, value: loginResponse.access);
+
+        if (loginResponse.refresh != null) {
+          await secureStorage.write(
+              key: Constants.refreshTokenKey, value: loginResponse.refresh);
+        }
+
+        return loginResponse;
+      } else {
+        print('Tokenni yangilash muvaffaqiyatsiz: ${response.body}');
+        throw Exception('Token yangilashda xatolik: ${response.body}');
+      }
+    } catch (e) {
+      print('Token yangilashda xatolik: $e');
+      throw Exception('Token yangilashda xatolik: $e');
     }
   }
 
@@ -137,7 +157,7 @@ class UserRepository {
       body: model.toFormData(), // toFormData() Map<String, String> qaytaradi
     );
 
-    print('Yuborilayotgan ma’lumotlar: ${model.toFormData()}');
+    print('Yuborilayotgan malumotlar: ${model.toFormData()}');
     print(response.statusCode);
     print('Server javobi: ${response.body}');
 
@@ -155,19 +175,54 @@ class UserRepository {
       throw Exception('Access token not found');
     }
 
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    try {
+      final response = await _sendRequest(() async => http.get(
+            url,
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+              'Accept': 'application/json',
+            },
+          ));
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return UserProfile.fromJson(data);
-    } else {
-      throw Exception('Failed to fetch user profile: ${response.body}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return UserProfile.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch user profile: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch user profile: $e');
+    }
+  }
+
+  /// So'rovlarni yuborish va tokenni yangilash
+  Future<http.Response> _sendRequest(
+      Future<http.Response> Function() request) async {
+    try {
+      final response = await request();
+      print('Original sorov status kodi: ${response.statusCode}');
+
+      if (response.statusCode == 401) {
+        print('401 javob olindi, tokenni yangilashga harakat qilinmoqda');
+        final refreshToken = await secureStorage.read(key: Constants.refreshTokenKey);
+        
+        if (refreshToken != null) {
+          try {
+            print('Token yangilandi, original sorov qayta yuborilmoqda');
+            return await request();
+          } catch (e) {
+            print('Token yangilashda xatolik: $e');
+            throw Exception('Token yangilashda xatolik');
+          }
+        } else {
+          throw Exception('Refresh token topilmadi');
+        }
+      }
+
+      return response;
+    } catch (e) {
+      print('Sorov yuborishda xato: $e');
+      rethrow;
     }
   }
 

@@ -33,7 +33,9 @@ class _MainHomeState extends State<MainHome> {
         body = const StatisticsScreen();
         break;
       case 3:
-        body = const MealScreen();
+        body = const MealScreen(
+          sessionID: 0,
+        );
         break;
       case 4:
         body = ProfileScreen();

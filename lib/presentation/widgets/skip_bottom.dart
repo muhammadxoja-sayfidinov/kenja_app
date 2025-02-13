@@ -26,8 +26,7 @@ class MySkipBottom extends StatelessWidget {
           splashFactory: NoSplash.splashFactory,
         ),
         child: Text('O\'tkazib yuborish',
-            style:
-                CustomTextStyle.style500.copyWith(color: isDark ? grey : grey)),
+            style: CustomTextStyle.style500.copyWith(color: grey)),
       ),
     );
   }

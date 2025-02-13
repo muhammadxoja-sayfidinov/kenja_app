@@ -8,7 +8,9 @@ import '../../widgets/homePage/mealCard.dart';
 import 'meal_detail_screen.dart';
 
 class MealScreen extends ConsumerWidget {
-  const MealScreen({super.key});
+  const MealScreen({super.key, required this.sessionID});
+
+  final int sessionID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,6 +49,7 @@ class MealScreen extends ConsumerWidget {
                       MaterialPageRoute(
                         builder: (context) => MealDetailPage(
                           meal: meal,
+                          sessionID: sessionID,
                         ),
                       ));
                 },

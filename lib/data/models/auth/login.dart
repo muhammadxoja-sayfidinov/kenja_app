@@ -14,22 +14,31 @@ class LoginRequest {
 }
 
 // lib/data/models/login.dart
+
 class LoginResponse {
   final String message;
   final String access;
-  final String refresh;
+  final String? refresh; // Nullable qilindi
 
   LoginResponse({
     required this.message,
     required this.access,
-    required this.refresh,
+    this.refresh,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      message: json['message'],
+      message: json['message'] ?? '',
       access: json['access'],
-      refresh: json['refresh'],
+      refresh: json['refresh'], // Null qabul qilishi uchun
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'access': access,
+      if (refresh != null) 'refresh': refresh!,
+    };
   }
 }

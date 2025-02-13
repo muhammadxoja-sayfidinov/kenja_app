@@ -66,6 +66,20 @@ class ProfileEditScreen extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
+                        // Biror tugma orqali refresh tokenni trigger qilish
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     final refreshSuccess =
+                        //         await authNotifier.refreshToken();
+                        //     if (refreshSuccess) {
+                        //       print('Token yangilandi');
+                        //     } else {
+                        //       print('Token yangilanmadi');
+                        //     }
+                        //   },
+                        //   child: Text('Refresh Token'),
+                        // ),
+
                         CustomTextFormField(
                           labelText: 'Ismingiz',
                           initialValue: profile.firstName,

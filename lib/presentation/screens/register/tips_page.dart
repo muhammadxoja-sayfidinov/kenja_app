@@ -47,7 +47,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                currentPage == 2 ? 48.verticalSpace : SizedBox(),
+                currentPage == 2 ? 48.verticalSpace : const SizedBox(),
                 isDark
                     ? MyNextBottomWhite(
                         onTap: () {
@@ -76,7 +76,7 @@ class _TipsScreenState extends ConsumerState<TipsScreen> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                    builder: (context) => const LoginPage()));
                           }
                         },
                         text: 'Davom etish',

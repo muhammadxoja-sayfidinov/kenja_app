@@ -24,32 +24,28 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    // bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final authState = ref.watch(authProvider);
     return ScreenUtilInit(
       designSize: const Size(375, 667),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return AdaptiveTheme(
-          light: lightTheme,
-          dark: darkTheme,
-          initial: AdaptiveThemeMode.light,
-          builder: (theme, darkTheme) => MaterialApp(
-            title: 'My Fitness App',
-            theme: theme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            home: authState.status == AuthStatus.authenticated
-                ? MainHome()
-                : TipsScreen(),
-            routes: {
-              '/login': (context) => const LoginPage(),
-              '/reset-password': (context) => PasswordResetPage(),
-              '/verification-code': (context) => VerificationCodePage(),
-              '/new-password': (context) => NewPasswordPage(),
-            },
-          ),
+        return MaterialApp(
+          title: 'My Fitness App',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
+          home: authState.status == AuthStatus.authenticated
+              ? MainHome()
+              : TipsScreen(),
+          routes: {
+            '/login': (context) => const LoginPage(),
+            '/reset-password': (context) => PasswordResetPage(),
+            '/verification-code': (context) => VerificationCodePage(),
+            '/new-password': (context) => NewPasswordPage(),
+          },
         );
       },
     );

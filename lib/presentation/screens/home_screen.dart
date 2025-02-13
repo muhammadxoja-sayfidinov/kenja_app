@@ -88,6 +88,7 @@ class HomeScreen extends ConsumerWidget {
                                   final workout = workouts[index];
                                   return ExercisesSection(
                                     category: workout,
+                                    sessionId: session.id,
                                   );
                                 },
                               ),
@@ -124,6 +125,7 @@ class HomeScreen extends ConsumerWidget {
                                               builder: (context) =>
                                                   MealDetailPage(
                                                 meal: meal,
+                                                sessionID: session.id,
                                               ),
                                             ));
                                       },

@@ -41,7 +41,10 @@ class WorkoutScreen extends ConsumerWidget {
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final category = categories[index];
-              return ExercisesSection(category: category);
+              return ExercisesSection(
+                category: category,
+                sessionId: 0,
+              );
             },
           );
         },

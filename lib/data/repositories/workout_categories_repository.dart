@@ -63,4 +63,29 @@ class WorkoutService {
       throw Exception('Mashqlarni yuklab bo‘lmadi');
     }
   }
+
+  Future<void> completeExercise(int sessionId, int exerciseId) async {
+    print(sessionId);
+    print(exerciseId);
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
+
+    final response = await http.post(
+      Uri.parse('https://owntrainer.uz/api/exercise/api/start-exercise/'),
+      // ← o‘zgardi!
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({"session_id": 3, "exercise_id": exerciseId}),
+    );
+    print(response.statusCode);
+    print(response.body); // Xatolik tafsilotini ko‘rish uchun
+
+    if (response.statusCode == 200) {
+      print('Exercise started successfully');
+    } else {
+      throw Exception('Failed to start Exercise: ${response.body}');
+    }
+  }
 }

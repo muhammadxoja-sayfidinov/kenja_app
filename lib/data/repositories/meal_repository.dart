@@ -38,4 +38,29 @@ class MealsService {
       throw Exception('Failed to load meals');
     }
   }
+
+  Future<void> completeMeal(int sessionId, int mealId) async {
+    final accessToken = await secureStorage.read(key: Constants.accessTokenKey);
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/food/api/meal/complete/'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'session_id': sessionId,
+        'meal_id': mealId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Javobni qayta ishlash
+      print('Meal completed successfully');
+    } else {
+      // Xatolikni qayta ishlash
+      throw Exception('Failed to complete meal');
+    }
+  }
 }
